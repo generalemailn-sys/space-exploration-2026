@@ -1,0 +1,1428 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Space Exploration 2026</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;700;800&display=swap">
+<style>
+/* Layout: Scratch-style project page for young players. Gradient menu bar; "Your job now" guide banner; big 4:3 stage (640x480 logical) with flag/stop; Mission tally + My choices beside it; Instructions, Notes, Mission log below. */
+:root{
+  --page:#eef0ff; --panel:#ffffff; --panel-line:#d8dcf5; --ink:#4a4f6a; --ink-strong:#2b2f48; --muted:#6f7596;
+  --menu1:#7b4ae2; --menu2:#3d8bff; --menu-ink:#ffffff; --guide:#fffbea; --guide-line:#ffd86b;
+  --c-rocket:#ff8c1a; --c-power:#ffbf00; --c-water:#3d8bff; --c-life:#33b864; --c-science:#9b5cff; --c-safety:#ff5c8a; --c-comms:#14b8a6;
+  --display:"Fredoka","Trebuchet MS","Helvetica Neue",Arial,sans-serif;
+  --body:"Nunito","Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --page:#171a2e; --panel:#22263f; --panel-line:#363b60; --ink:#c9cdea; --ink-strong:#f1f2ff; --muted:#9aa0c6;
+  --menu1:#6a3fd0; --menu2:#2f73e0; --guide:#2c2a1c; --guide-line:#7a6420; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --page:#171a2e; --panel:#22263f; --panel-line:#363b60; --ink:#c9cdea; --ink-strong:#f1f2ff; --muted:#9aa0c6;
+  --menu1:#6a3fd0; --menu2:#2f73e0; --guide:#2c2a1c; --guide-line:#7a6420; color-scheme:dark }
+[hidden]{display:none!important}
+html,body{min-height:100%}
+body{background:var(--page);color:var(--ink);font-family:var(--body);font-size:16px}
+.menubar{background:linear-gradient(90deg,var(--menu1),var(--menu2));color:var(--menu-ink);padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;align-items:center;gap:12px}
+.menubar .logo{width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.2);display:grid;place-items:center;flex:none}
+.menubar b{font:600 18px var(--display);letter-spacing:.01em}
+.menubar span{font-size:14px;opacity:.9}
+.wrap{max-width:1280px;margin:0 auto;padding-block:16px 32px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.ptitle{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin-bottom:10px}
+.ptitle h1{margin:0;font:700 28px var(--display);color:var(--ink-strong);text-wrap:balance}
+.ptitle .by{font-size:15px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:minmax(0,820px) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:1080px){.grid{grid-template-columns:minmax(0,1fr)}}
+.below{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:18px}
+@media (max-width:1080px){.below{grid-template-columns:minmax(0,1fr)}}
+.player{min-width:0}
+.guide{background:var(--guide);border:2px solid var(--guide-line);border-radius:14px;padding:10px 14px;margin-bottom:8px;display:flex;flex-direction:column;gap:6px;max-width:820px}
+.steps{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.stp{display:flex;align-items:center;gap:6px;font:600 14px var(--display);color:var(--muted)}
+.stp i{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:12px;background:var(--panel-line);color:var(--ink)}
+.stp.done i{background:#33b864;color:#fff}.stp.now{color:var(--ink-strong)}.stp.now i{background:#7b4ae2;color:#fff;box-shadow:0 0 0 3px rgba(123,74,226,.25)}
+.stp + .stp::before{content:"";width:16px;height:2px;background:var(--panel-line);margin-right:2px}
+.sub{margin-left:auto;font:700 14px var(--body);color:var(--muted)}
+.job{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font-size:16px;line-height:1.4;color:var(--ink-strong)}
+.job b{font:600 15px var(--display);color:#b7791f}
+.gtools{display:flex;gap:8px;flex-wrap:wrap}
+.gbtn{font:600 14px var(--display);border:2px solid var(--guide-line);background:var(--panel);color:var(--ink-strong);border-radius:10px;padding:4px 10px;cursor:pointer}
+.gbtn:hover,.gbtn:focus-visible{border-color:#7b4ae2;outline:none}
+.term{all:unset;cursor:pointer;border-bottom:2px dotted #7b4ae2;color:inherit;font-weight:700}
+.term::after{content:"i";display:inline-grid;place-items:center;width:15px;height:15px;margin-left:3px;border-radius:50%;background:#7b4ae2;color:#fff;font:700 10px var(--body);vertical-align:2px}
+.term:focus-visible{outline:2px solid #7b4ae2}
+#pop{position:fixed;z-index:50;max-width:280px;background:var(--panel);color:var(--ink-strong);border:2px solid #7b4ae2;border-radius:12px;padding:8px 12px;font-size:15px;line-height:1.4;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+#pop b{font-family:var(--display);font-weight:600;color:#7b4ae2;display:block}
+.controls{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.ctl{width:40px;height:34px;border-radius:8px;border:1px solid transparent;background:transparent;display:grid;place-items:center;cursor:pointer;color:var(--ink)}
+.ctl:hover,.ctl:focus-visible{background:rgba(123,74,226,.14);border-color:rgba(123,74,226,.3);outline:none}
+.ctl.on{background:rgba(51,184,100,.2)}
+.controls .sp{flex:1}
+.stagebox{position:relative;width:100%;max-width:820px;aspect-ratio:4/3;border:3px solid #fff;box-shadow:0 6px 24px rgba(60,40,140,.22);border-radius:14px;overflow:hidden;background:#120b33}
+.stagebox:fullscreen{max-width:none;border-radius:0;border:0;background:#000}
+#stage{position:absolute;left:0;top:0;width:640px;height:480px;transform-origin:0 0;overflow:hidden;font-family:var(--body);color:#2b2f48;user-select:none}
+#bg{position:absolute;inset:0;width:640px;height:480px}
+.shoot{position:absolute;width:120px;height:2px;background:linear-gradient(90deg,rgba(255,255,255,0),#fff);border-radius:2px;opacity:0;z-index:1;transform:rotate(-24deg)}
+@media (prefers-reduced-motion:no-preference){.shoot{animation:shoot 7s linear infinite}.shoot.s2{animation-delay:3.5s}}
+@keyframes shoot{0%{opacity:0;transform:translate(0,0) rotate(-24deg)}3%{opacity:1}12%{opacity:0;transform:translate(-300px,140px) rotate(-24deg)}100%{opacity:0}}
+#monitors{position:absolute;left:8px;top:8px;right:170px;display:flex;flex-wrap:nowrap;overflow:hidden;gap:5px;z-index:5}
+.mon{display:flex;align-items:center;gap:6px;background:#eaf2ff;border:1.5px solid #c3cde4;border-radius:6px;padding:3px 4px 3px 7px;font:700 13px var(--body);color:#4a4f6a;line-height:1;white-space:nowrap}
+.mon i{font-style:normal;background:var(--c-rocket);color:#fff;border-radius:5px;padding:4px 8px;min-width:26px;text-align:center;font-variant-numeric:tabular-nums}
+.mon.warn i{background:#e5484d}.mon.good i{background:#22a454}
+#stagebtns{position:absolute;top:8px;right:8px;z-index:9;display:flex;gap:6px}
+.tbtn{font:600 15px var(--display);border:2px solid rgba(0,0,0,.15);border-radius:10px;padding:5px 12px;cursor:pointer;color:#fff;box-shadow:0 2px 0 rgba(0,0,0,.2)}
+.tbtn.clue{background:#ffbf00;color:#3b2a00}.tbtn.quit{background:#ff5c8a}
+.tbtn[disabled]{opacity:.45;cursor:not-allowed}
+#content{position:absolute;left:14px;right:14px;top:50px;bottom:100px;z-index:4;display:flex;flex-direction:column;gap:8px}
+#content.full{bottom:14px}
+#sprite{position:absolute;left:8px;bottom:10px;width:76px;height:76px;z-index:6}
+@media (prefers-reduced-motion:no-preference){#sprite{animation:bob 2.6s ease-in-out infinite}}
+@keyframes bob{50%{transform:translateY(-4px)}}
+#bubble{position:absolute;left:98px;right:12px;bottom:14px;z-index:6;background:#fff;border:3px solid #c3cde4;border-radius:18px;padding:8px 14px;font:700 16px/1.32 var(--body);color:#4a4f6a;max-height:82px;overflow:auto}
+#bubble::before{content:"";position:absolute;left:-11px;bottom:16px;width:14px;height:14px;background:#fff;border-left:3px solid #c3cde4;border-bottom:3px solid #c3cde4;transform:rotate(45deg) skew(10deg,10deg)}
+#ask{position:absolute;left:8px;right:8px;bottom:8px;z-index:8;background:#fff;border:3px solid #c3cde4;border-radius:12px;padding:8px;display:flex;flex-direction:column;gap:6px}
+#ask label{font:700 16px var(--body);color:#4a4f6a}
+#ask .row{display:flex;gap:8px}
+#ask input{flex:1;min-width:0;border:2px solid #c3cde4;border-radius:18px;padding:6px 12px;font:16px var(--body);color:#2b2f48;background:#fff}
+#ask input:focus{border-color:#7b4ae2;outline:none}
+#ask button{width:34px;height:34px;border-radius:50%;border:0;background:#7b4ae2;color:#fff;font-weight:800;font-size:16px;cursor:pointer}
+#cluebox{position:absolute;top:50px;right:12px;width:330px;z-index:12;background:#fffbe6;border:3px solid #ffbf00;border-radius:14px;padding:10px 12px;box-shadow:0 8px 24px rgba(0,0,0,.35);font:700 15px/1.35 var(--body);color:#3b2a00}
+#cluebox .h{display:flex;justify-content:space-between;align-items:center;font:600 14px var(--display);color:#9a6b00;margin-bottom:4px}
+#cluebox button{border:0;background:transparent;font-size:18px;cursor:pointer;color:#9a6b00}
+.overlay{position:absolute;inset:0;z-index:20;background:rgba(10,6,40,.6);display:grid;place-items:center}
+.dialog{background:#fff;border-radius:16px;border:3px solid #c3cde4;padding:14px 18px;width:min(580px,94%);max-height:90%;overflow:auto;color:#2b2f48}
+.dialog h3{margin:0 0 6px;font:600 22px var(--display)}
+.dialog h4{margin:10px 0 4px;font:600 16px var(--display);color:#7b4ae2}
+.dialog p{margin:0 0 8px;font-size:15px;line-height:1.4}
+.dialog ul.plain{margin:0 0 6px;padding-left:18px;font-size:14.5px;line-height:1.4}
+.simlist{list-style:none;margin:0 0 10px;padding:0;display:flex;flex-direction:column;gap:4px}
+.simlist li{font-size:14.5px;line-height:1.35;padding:4px 8px 4px 30px;border-radius:8px;position:relative;background:#f4f6fc}
+.simlist li::before{position:absolute;left:9px;top:4px;font-weight:800}
+.simlist li.ok::before{content:"✓";color:#1f8a4c}.simlist li.bad{background:#fdecea}.simlist li.bad::before{content:"✗";color:#c0392b}.simlist li.info::before{content:"•";color:#7f85a3}
+.verdict{border-radius:10px;padding:8px 12px;font:600 17px var(--display);margin-bottom:10px}
+.verdict.win{background:#e3f7ea;color:#1f8a4c}.verdict.lose{background:#fdecea;color:#c0392b}
+.btnrow{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.sbtn{font:600 17px var(--display);color:#fff;border-radius:12px;padding:8px 16px;border:2px solid rgba(0,0,0,.18);cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.2)}
+.sbtn.sm{font-size:15px;padding:6px 12px}
+.sbtn:active{transform:translateY(2px);box-shadow:none}
+.sbtn:focus-visible,.tile:focus-visible,.pbtn:focus-visible,.tab:focus-visible,.tbtn:focus-visible,.cbtn:focus-visible,.card[tabindex]:focus-visible{outline:3px solid #ffbf00;outline-offset:2px}
+.sbtn[disabled]{opacity:.45;cursor:not-allowed}
+.back{font:600 15px var(--display);background:rgba(255,255,255,.92);color:#4a4f6a;border:2px solid #c3cde4;border-radius:10px;padding:5px 12px;cursor:pointer;align-self:flex-start}
+.blue{background:#3d8bff}.green{background:#33b864}.yellow{background:#ffab19}.pink{background:#ff5c8a}.purple{background:#9b5cff}.grey{background:#7f85a3}.teal{background:#14b8a6}
+.sbtn.ready{box-shadow:0 0 0 4px rgba(255,255,255,.9),0 0 22px 6px rgba(51,184,100,.9)}
+@media (prefers-reduced-motion:no-preference){.sbtn.ready{animation:glow 1.6s ease-in-out infinite}.pulse{animation:pulse 1.2s ease-in-out infinite}}
+@keyframes glow{50%{box-shadow:0 0 0 4px #fff,0 0 30px 10px rgba(51,184,100,.6)}}
+@keyframes pulse{50%{box-shadow:0 0 0 5px #ffd23f}}
+.pulse{box-shadow:0 0 0 4px #ffd23f}
+.card{background:#fff;border:3px solid #c3cde4;border-radius:14px;padding:10px 13px;color:#2b2f48}
+.card .k{font:600 12px var(--display);text-transform:uppercase;letter-spacing:.09em;color:var(--pc,#7b4ae2)}
+.card h3{margin:2px 0 6px;font:600 22px/1.12 var(--display);text-wrap:balance}
+.card p{margin:0 0 6px;font-size:16px;line-height:1.38}
+.card ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:5px}
+.card li{font-size:15.5px;line-height:1.32;padding-left:18px;position:relative}
+.card li::before{position:absolute;left:0;font-weight:800}
+.card li.good::before{content:"+";color:#1f8a4c}.card li.bad::before{content:"−";color:#c0392b}.card li.info::before{content:"•";color:#7f85a3}
+.ifb{border-radius:9px;padding:6px 10px;font-size:15px;line-height:1.32;margin-top:6px;opacity:.5;border:2.5px solid transparent}
+.ifb b{display:block;font:600 12px var(--display);letter-spacing:.08em}
+.ifb.y{background:#e3f7ea}.ifb.y b{color:#1f8a4c}.ifb.n{background:#fdecea}.ifb.n b{color:#c0392b}
+.ifb.hit{opacity:1}.ifb.y.hit{border-color:#1f8a4c}.ifb.n.hit{border-color:#c0392b}
+.why{background:#eef4ff;border-radius:9px;padding:6px 10px;font-size:15px;line-height:1.35;margin-top:6px}
+.why b{color:#2f63c8;font-family:var(--display);font-weight:600}
+.think{background:#fff4c2;border-radius:9px;padding:6px 10px;font-size:15px;margin-top:auto}
+.think b{color:#9a6b00}
+.sites{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;flex:1;min-height:0}
+.sites .card{cursor:pointer;display:flex;flex-direction:column;padding:9px 10px;transition:transform .12s;border-color:var(--pc);background:linear-gradient(180deg,#fff,#f6f3ff)}
+.sites .card:hover,.sites .card:focus-visible{transform:translateY(-3px) scale(1.01);outline:none;box-shadow:0 6px 18px rgba(0,0,0,.3)}
+.sites h3{font-size:18px}
+.sites li{font-size:14px;line-height:1.25}
+.sites .card ul{gap:3px}
+.sites .think{font-size:13.5px;padding:4px 8px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.academy{display:flex;flex-direction:column;gap:8px;margin:auto 0}
+.academy .card h3{font-size:26px}
+.jgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.jg{background:#f4f2ff;border-radius:10px;padding:6px 9px;font-size:14.5px;line-height:1.3}
+.jg b{display:block;font:600 16px var(--display)}
+.team{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:6px 0}
+.nbtn{font:700 22px var(--display);border:3px solid #c3cde4;background:#fff;border-radius:12px;padding:6px;cursor:pointer;color:#2b2f48}
+.nbtn.on{border-color:#7b4ae2;background:#efe8ff}
+.players{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px}
+.prow{display:flex;flex-direction:column;gap:3px}
+.prow input{border:2px solid #c3cde4;border-radius:10px;padding:5px 10px;font:16px var(--body);min-width:0}
+.prow input:focus{border-color:#7b4ae2;outline:none}
+.roles{display:flex;flex-wrap:wrap;gap:4px}
+.role{font:700 12.5px var(--body);color:#fff;border-radius:8px;padding:2px 7px;background:var(--rc)}
+.shop{display:flex;flex-direction:column;gap:4px;flex:1;min-height:0}
+.shopbar{display:flex;align-items:center;gap:8px}
+.owner{font:700 14px var(--body);color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6);margin-left:auto}
+.tabs{display:flex;gap:5px;flex-wrap:wrap}
+.tab{font:600 14px var(--display);border:0;border-radius:10px 10px 4px 4px;padding:5px 9px;cursor:pointer;color:#fff;opacity:.72;background:var(--tc)}
+.tab.on{opacity:1;box-shadow:0 0 0 3px #fff inset}
+.tab small{font:700 12px var(--body);background:rgba(255,255,255,.3);border-radius:8px;padding:1px 6px;margin-left:5px}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;align-content:start;min-height:116px}
+.tile{position:relative;background:#fff;border:3px solid var(--tc);border-radius:12px;padding:5px 8px 6px;cursor:pointer;text-align:left;min-height:56px;box-shadow:inset 0 5px 0 var(--tc)}
+.tile .tn{font:600 15.5px/1.12 var(--display);color:#2b2f48;padding:3px 22px 0 0}
+.tile .ts{display:flex;gap:4px;margin-top:4px;flex-wrap:wrap}
+.bd{font:800 12.5px var(--body);border-radius:6px;padding:2px 6px;color:#fff;font-variant-numeric:tabular-nums}
+.bd.c{background:#ff8c1a}.bd.m{background:#6b7190}.bd.pp{background:#22a454}.bd.pn{background:#e5484d}.bd.p0{background:#b4bad0}.bd.cr{background:#3d8bff}.bd.fit{background:#22a454}.bd.nofit{background:#e5484d}.bd.best{background:#7b4ae2}
+.tile.sel{background:color-mix(in srgb,var(--tc) 22%,#fff);box-shadow:inset 0 5px 0 var(--tc),0 0 0 3px #fff}
+.tile.must::after{content:"MUST";position:absolute;right:6px;top:8px;font:800 10px var(--body);color:#c0392b;letter-spacing:.05em}
+.tile .q{position:absolute;right:5px;top:6px;background:#7b4ae2;color:#fff;font:800 12px var(--body);border-radius:9px;padding:1px 6px}
+.tile .minus{position:absolute;right:5px;bottom:5px;width:22px;height:22px;border-radius:50%;border:0;background:#e5484d;color:#fff;font-weight:800;font-size:15px;line-height:22px;padding:0;cursor:pointer}
+.tile.off{opacity:.4;cursor:not-allowed}
+.rbar{height:8px;border-radius:5px;background:#e3e6f2;margin-top:5px;overflow:hidden;position:relative}
+.rbar i{position:absolute;left:0;top:0;bottom:0;background:#22a454;border-radius:5px}
+.rbar.over i{background:#e5484d}
+.check{background:rgba(255,255,255,.95);border-radius:12px;padding:5px 10px;display:grid;grid-template-columns:1fr 1fr;gap:2px 14px}
+.check .t{font:600 12.5px var(--display);text-transform:uppercase;letter-spacing:.08em;color:#7b4ae2}
+.check .col{display:flex;flex-direction:column;gap:1px}
+.check div.l{font-size:13.5px;line-height:1.18;padding-left:20px;position:relative}
+.check div.l::before{position:absolute;left:0;top:0;font-weight:800}
+.check div.l.ok::before{content:"✓";color:#1f8a4c}.check div.l.bad::before{content:"✗";color:#c0392b}.check div.l.nb::before{content:"•";color:#7f85a3}
+.guidebox{background:#fffbe6;border:3px solid #ffbf00;border-radius:12px;padding:5px 10px;font:700 14.5px/1.3 var(--body);color:#3b2a00}
+.guidebox b{font-family:var(--display);font-weight:600;color:#9a6b00}
+.helpline{background:#fff;border:3px solid #c3cde4;border-radius:12px;padding:5px 12px;font:700 14.5px/1.3 var(--body);color:#4a4f6a;height:46px;overflow-y:auto}
+.helpline.err{border-color:#e5484d;background:#fff4f4;color:#a3242a}
+.actions{display:flex;gap:8px;justify-content:flex-end;align-items:center;margin-top:auto}
+.actions .sp{flex:1}
+.toggles{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.tog{background:#fff;border:3px solid #c3cde4;border-radius:12px;padding:6px 9px;font:600 15px var(--display);color:#2b2f48;cursor:pointer;text-align:left}
+.tog small{display:block;font:700 12.5px var(--body);color:#7f85a3}
+.tog.on{border-color:#22a454;background:#e3f7ea}.tog.off{border-color:#e5484d;background:#fdecea}.tog.lock{cursor:not-allowed}
+.die{width:64px;height:64px;border-radius:14px;background:#fff;border:4px solid #2b2f48;display:grid;place-items:center;font:700 34px var(--display);color:#2b2f48;margin:0 auto}
+.planets{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:auto 0 0}
+.pbtn{border:0;background:transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;color:#fff;font:600 18px var(--display);padding:6px;border-radius:16px}
+.pbtn:hover{background:rgba(255,255,255,.12)}
+.pbtn .orb{width:88px;height:88px;border-radius:50%;box-shadow:inset -14px -10px 0 rgba(0,0,0,.22),0 0 28px var(--glow)}
+@media (prefers-reduced-motion:no-preference){.pbtn:hover .orb{animation:spin 1.2s ease-in-out}}
+@keyframes spin{50%{transform:scale(1.08) rotate(8deg)}}
+.pbtn small{font:700 13px var(--body);opacity:.92}
+.pbtn .st{color:#ffd23f;font:700 14px var(--body);min-height:18px}
+.ttl{color:#fff;text-align:center;text-shadow:0 3px 10px rgba(0,0,0,.5)}
+.ttl h2{margin:4px 0 2px;font:700 38px var(--display);letter-spacing:.01em}
+.ttl p{margin:0;font-size:17px;font-weight:700}
+.titlebtns{display:flex;gap:8px;justify-content:center;margin-bottom:auto}
+.story{display:flex;flex-direction:column;gap:7px;flex:1;min-height:0}
+.tl{display:flex;gap:4px}
+.seg{flex:1;text-align:center;font:600 13.5px var(--display);color:#fff;background:rgba(255,255,255,.18);border-radius:8px;padding:4px 2px;border:2px solid rgba(255,255,255,.3)}
+.seg.done{background:#33b864;border-color:#33b864}.seg.now{background:#ffbf00;color:#3b2a00;border-color:#fff}
+.scene{display:grid;grid-template-columns:1.3fr 1fr;gap:8px;background:rgba(255,255,255,.93);border-radius:14px;padding:8px}
+.mach{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;align-content:start}
+.mc{border-radius:9px;padding:4px 7px;font:600 13.5px/1.15 var(--display);border:2.5px solid #c3cde4;background:#f4f6fc;color:#7f85a3}
+.mc small{display:block;font:700 11.5px var(--body)}
+.mc.on{border-color:#22a454;background:#e3f7ea;color:#1b5e33;box-shadow:0 0 10px rgba(51,184,100,.45)}
+.mc.src.on{border-color:#e0a800;background:#fff6cf;color:#6b4e00;box-shadow:0 0 10px rgba(255,191,0,.55)}
+.gauges{display:flex;flex-direction:column;gap:6px}
+.gg .gl{font:700 13.5px var(--body);color:#2b2f48;display:flex;justify-content:space-between}
+.gb{height:12px;border-radius:7px;background:#e3e6f2;overflow:hidden;position:relative}
+.gb i{position:absolute;left:0;top:0;bottom:0;border-radius:7px;background:#3d8bff;transition:width .8s ease}
+.gg.power i{background:#ffbf00}.gg.health i{background:#33b864}.gg.health.low i{background:#e5484d}.gg.data i{background:#9b5cff}.gg.food i{background:#33b864}.gg.fuel i{background:#ff8c1a}
+.cap{background:rgba(255,255,255,.96);border-radius:14px;padding:6px 12px;display:flex;flex-direction:column;gap:2px;min-height:96px;max-height:118px;overflow:hidden}
+.ln{font:700 15.5px/1.32 var(--body);color:#2b2f48}
+.ln.good{color:#1b7a43}.ln.bad{color:#b3261e}.ln.why{color:#2f63c8;font-weight:700}.ln.big{font:600 17px var(--display)}
+@media (prefers-reduced-motion:no-preference){.ln{animation:fadein .4s ease}}
+@keyframes fadein{from{opacity:0;transform:translateY(4px)}}
+.dec{display:flex;flex-direction:column;gap:6px}
+.story.pw .cap, .story.pw .sctl{display:none}
+.story.pw .toggles{grid-template-columns:repeat(4,1fr);gap:5px}
+.story.pw .tog{padding:3px 7px;font-size:14px;border-width:2.5px}
+.pwrow{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+.dq{font:600 16px var(--display);color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.7);text-align:center}
+.sctl{display:flex;gap:6px;justify-content:flex-end;margin-top:auto}
+.cbtn{font:600 14px var(--display);background:rgba(255,255,255,.92);color:#2b2f48;border:2px solid #c3cde4;border-radius:9px;padding:4px 10px;cursor:pointer}
+.scorewrap{display:flex;flex-direction:column;gap:8px;flex:1;min-height:0}
+.scorewrap .card{overflow:auto;flex:1;min-height:0}
+.score{display:flex;flex-direction:column;gap:2px}
+.score .r{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;border-bottom:1.5px dashed #e0e4f0;padding:2px 0}
+.score .r b.cat{font:600 16px var(--display)}
+.score .r small{display:block;color:#6f7596;font-size:13.5px;line-height:1.25}
+.score .r .v{font:700 17px var(--body);white-space:nowrap;font-variant-numeric:tabular-nums}
+.tot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:4px}
+.tot .n{font:700 34px var(--display);color:#2b2f48;font-variant-numeric:tabular-nums}
+.tot .n small{font-size:18px;color:#7f85a3}
+.tot .stars{font-size:30px;color:#ffb400;letter-spacing:3px}
+.result{border-radius:10px;padding:6px 11px;font:600 17px var(--display);margin-top:4px}
+.result.win{background:#e3f7ea;color:#1f8a4c}.result.lose{background:#fdecea;color:#c0392b}.result.prac{background:#e0f7f4;color:#0f766e}
+.tip{background:#eef4ff;border-radius:10px;padding:5px 11px;font-size:15px;line-height:1.35;margin-top:5px}
+.tip b{color:#2f63c8;font-family:var(--display);font-weight:600}
+.pinned{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;background:rgba(255,255,255,.18);border-radius:12px;padding:6px}
+.clues{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.clue{background:#fff;border:3px solid #c3cde4;border-radius:12px;padding:7px 9px;font-size:14.5px;line-height:1.3;cursor:default;text-align:left;color:#2b2f48;font-family:var(--body)}
+.clue b{display:block;font:600 17px var(--display)}
+.clue i{font-style:normal;font:600 11px var(--display);text-transform:uppercase;letter-spacing:.08em;color:#9b5cff}
+.clue.pick{cursor:pointer}.clue.pick:hover{border-color:#9b5cff;transform:translateY(-2px)}
+.burst{position:absolute;inset:0;pointer-events:none;z-index:15;overflow:hidden}
+.burst span{position:absolute;top:50%;left:50%;font-size:26px;color:#ffd23f;opacity:0}
+@media (prefers-reduced-motion:no-preference){.burst span{animation:pop 1.4s ease-out forwards}}
+@keyframes pop{0%{opacity:1;transform:translate(-50%,-50%) scale(.4)}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1.3) rotate(140deg)}}
+table.board{width:100%;border-collapse:collapse;font-size:14.5px}
+table.board th,table.board td{text-align:left;padding:4px 6px;border-bottom:1px solid #e0e4f0}
+table.board td.n{text-align:right;font-variant-numeric:tabular-nums;font-weight:800}
+textarea.rep{width:1px;height:1px;opacity:0;position:fixed;left:-9999px}
+.side{display:flex;flex-direction:column;gap:14px;min-width:0}
+.panel{background:var(--panel);border:1px solid var(--panel-line);border-radius:14px;overflow:hidden}
+.panel .ph{padding:9px 16px;font:600 17px var(--display);color:#fff;background:var(--hc,var(--menu1))}
+.panel .pb{padding:12px 16px}
+.panel p,.panel li{font-size:15px;line-height:1.55;color:var(--ink)}
+.panel p{margin:0 0 8px}
+.panel ol,.panel ul{margin:0;padding-left:20px}
+.panel li{margin-bottom:3px}
+.tally{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;align-items:center;margin:0}
+.tally dt{font-size:15px;color:var(--muted);font-weight:700}
+.tally dd{margin:0;font:700 17px var(--body);color:var(--ink-strong);font-variant-numeric:tabular-nums;text-align:right}
+.tally dd.warn{color:#e5484d}.tally dd.good{color:#22a454}
+.ptsbox{margin-top:10px;border-top:1px solid var(--panel-line);padding-top:8px}
+.ptsbox .big{font:700 30px var(--display);color:var(--ink-strong)}
+.ptsbox .big small{font-size:16px;color:var(--muted)}
+.ptsbox ul{list-style:none;padding:0;margin:4px 0 0}
+.ptsbox li{display:flex;justify-content:space-between;font-size:14px;margin:0;padding:1px 0}
+.ptsbox li.pend{color:var(--muted);font-style:italic}
+#choices{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:5px;max-height:320px;overflow:auto}
+#choices li{font-size:15px;line-height:1.35;margin:0;padding:5px 9px;border-radius:9px;background:color-mix(in srgb,var(--cc,#7b4ae2) 14%,transparent);border-left:5px solid var(--cc,#7b4ae2)}
+#choices li small{display:block;color:var(--muted);font-size:12.5px;font-weight:700}
+#log{list-style:none;padding:0;margin:0;max-height:240px;overflow:auto;font-size:14px}
+#log li{padding:4px 0;border-bottom:1px solid var(--panel-line);display:flex;gap:10px;margin:0}
+#log li span{color:var(--muted);font-variant-numeric:tabular-nums;flex:none;width:44px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 10px;margin-top:8px;font-size:14px;align-items:center}
+.sw{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-2px;margin-right:4px}
+.empty{color:var(--muted);font-size:15px}
+.below .wide{grid-column:1/-1}
+.src{columns:2;column-gap:28px;padding-left:20px;margin:0}
+@media (max-width:700px){.src{columns:1}}
+.src li{break-inside:avoid;font-size:14.5px}
+.src a{color:#3d6fd6}
+.pv{background:#f4f6fc;border-radius:10px;padding:5px 10px;display:flex;flex-direction:column;gap:2px}
+.pv div{font-size:14px;line-height:1.3;padding-left:20px;position:relative;color:#2b2f48}
+.pv div::before{position:absolute;left:0;font-weight:800}
+.pv .ok::before{content:"✓";color:#1f8a4c}.pv .bad::before{content:"✗";color:#c0392b}.pv .warn::before{content:"!";color:#b7791f}
+.objs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+.obj{border:2.5px solid #c3cde4;border-radius:12px;padding:6px 10px;background:#f7f8fd}
+.obj b{font:600 16px var(--display);display:block}
+.obj span{font-size:14.5px;line-height:1.3}
+.sortrow{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;background:#fff;border-radius:10px;padding:3px 9px;border:2.5px solid #c3cde4}
+.sortrow b{font:600 15.5px var(--display)}
+.sortrow small{display:block;font-size:12.5px;line-height:1.25;color:#6f7596}
+.sortbtns{display:flex;gap:4px}
+.sb{font:600 13.5px var(--display);border:2px solid #c3cde4;background:#fff;border-radius:9px;padding:4px 8px;cursor:pointer;color:#2b2f48}
+.sb.on.hint{background:#33b864;border-color:#33b864;color:#fff}.sb.on.notproof{background:#ffab19;border-color:#ffab19;color:#fff}.sb.on.bad{background:#e5484d;border-color:#e5484d;color:#fff}
+.phone-note{display:none}
+@media (max-width:700px){.phone-note{display:block;background:#fff4c2;color:#5b4300;border-radius:10px;padding:6px 10px;font-size:14px;margin-bottom:8px}}
+.guide.min #job > :nth-child(3), .guide.min #job > :nth-child(4), .guide.min .gtools .gbtn:not(#tipsbtn){display:none}
+</style>
+</head>
+<body style="margin:0">
+
+
+<div class="menubar">
+  <div class="logo" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><path fill="#fff" d="M12 2c3 2.5 4.5 6 4.5 10l2.5 3-1 4-3-2H9l-3 2-1-4 2.5-3C7.5 8 9 4.5 12 2z"/><circle cx="12" cy="10" r="2" fill="#7b4ae2"/></svg></div>
+  <b>Space Exploration 2026</b><span>NASA hackathon project</span>
+</div>
+
+<div class="wrap">
+  <div class="ptitle"><h1>Space Exploration 2026</h1><span class="by">Design, test and fly a mission to the Moon, Mars, Jupiter or a Mystery Planet</span></div>
+  <div class="grid">
+    <div class="player">
+      <div class="phone-note">Best on a laptop or tablet: the game screen is small on a phone.</div>
+      <section class="guide" id="guide" aria-label="Your job now">
+        <div class="steps" id="steps"></div>
+        <div class="job" id="job"></div>
+        <div class="gtools"><button class="gbtn" id="tipsbtn" type="button">Hide tips</button><button class="gbtn" id="readbtn" type="button">Read to me</button><button class="gbtn" id="wordsbtn" type="button">Space words</button><button class="gbtn" id="howbtn" type="button">How to play</button></div>
+      </section>
+      <div class="controls">
+        <button class="ctl" id="flag" title="Green flag: start" aria-label="Start game">
+          <svg width="26" height="26" viewBox="0 0 24 24"><path d="M5 3v18" stroke="#2f8a3a" stroke-width="2.2" stroke-linecap="round"/><path d="M6 4c3-2 6 2 9 0s4 0 4 0v9s-1-2-4 0-6-2-9 0z" fill="#33b864" stroke="#2f8a3a" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="ctl" id="stop" title="Stop" aria-label="Stop game">
+          <svg width="24" height="24" viewBox="0 0 24 24"><path d="M8 2h8l6 6v8l-6 6H8l-6-6V8z" fill="#ec5959" stroke="#b84848" stroke-width="1.4"/></svg>
+        </button>
+        <div class="sp"></div>
+        <button class="ctl" id="fs" title="Full screen" aria-label="Full screen">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+        </button>
+      </div>
+      <div class="stagebox" id="stagebox">
+        <div id="stage">
+          <canvas id="bg" width="1280" height="960"></canvas>
+          <div class="shoot" style="left:560px;top:40px"></div><div class="shoot s2" style="left:420px;top:120px"></div>
+          <div id="monitors"></div>
+          <div id="stagebtns"><button class="tbtn clue" id="cluebtn" disabled>Clues</button><button class="tbtn quit" id="quitbtn" disabled>Quit</button></div>
+          <div id="content"></div>
+          <svg id="sprite" viewBox="0 0 64 64" aria-hidden="true">
+            <line x1="32" y1="4" x2="32" y2="14" stroke="#6b7190" stroke-width="2.5"/>
+            <circle cx="32" cy="5" r="4.5" fill="#ff8c1a" stroke="#cc6d0e" stroke-width="1.5"/>
+            <rect x="12" y="13" width="40" height="30" rx="11" fill="#f4f6fb" stroke="#6b7190" stroke-width="2.5"/>
+            <rect x="17" y="19" width="30" height="17" rx="8" fill="#26305a"/>
+            <circle cx="26" cy="27.5" r="3.8" fill="#5fe1ff"/><circle cx="38" cy="27.5" r="3.8" fill="#5fe1ff"/>
+            <path d="M26 33q6 3 12 0" stroke="#5fe1ff" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+            <rect x="20" y="44" width="24" height="14" rx="5" fill="#9b5cff" stroke="#6b45c2" stroke-width="2.2"/>
+            <circle cx="32" cy="51" r="3" fill="#ffd23f"/>
+            <rect x="8" y="46" width="9" height="5" rx="2.5" fill="#6b7190"/><rect x="47" y="46" width="9" height="5" rx="2.5" fill="#6b7190"/>
+          </svg>
+          <div id="bubble"></div>
+          <div id="cluebox" hidden><div class="h"><span id="cluehead">Clue</span><button id="clueclose" aria-label="Close clue">✕</button></div><div id="cluetext"></div></div>
+          <div id="ask" hidden><label for="askin" id="askq"></label><div class="row"><input id="askin" autocomplete="off"><button id="askok" aria-label="Submit answer">✓</button></div></div>
+          <div id="overlay" class="overlay" hidden></div>
+        </div>
+      </div>
+    </div>
+    <aside class="side">
+      <div class="panel" style="--hc:#ff8c1a"><div class="ph">Mission tally</div><div class="pb" id="tally"></div></div>
+      <div class="panel" style="--hc:#33b864"><div class="ph">My choices</div><div class="pb"><ul id="choices"></ul></div></div>
+    </aside>
+  </div>
+  <div class="below">
+    <div class="panel" style="--hc:#3d8bff"><div class="ph">Instructions</div><div class="pb">
+      <ol>
+        <li>Click the <b>green flag</b>. New players: read the 3 Mission Academy screens.</li>
+        <li>Pick a planet, choose 1–4 explorers, and read the mission briefing.</li>
+        <li>The yellow <b>Your job now</b> box always says what to do and why.</li>
+        <li>In the shop, pack parts first, then pick the smallest rocket that fits. Tap <b>Simulate</b> to test (first test free).</li>
+        <li>Score <b>60 or more</b> out of 100 to move on. Try <b>Sandbox</b> to practice with unlimited coins.</li>
+      </ol>
+      <div class="legend"><span><span class="sw" style="background:var(--c-rocket)"></span>Rocket</span><span><span class="sw" style="background:var(--c-power)"></span>Power</span><span><span class="sw" style="background:var(--c-water)"></span>Water</span><span><span class="sw" style="background:var(--c-life)"></span>Life support</span><span><span class="sw" style="background:var(--c-science)"></span>Science</span><span><span class="sw" style="background:var(--c-comms)"></span>Comms</span><span><span class="sw" style="background:var(--c-safety)"></span>Safety</span></div>
+    </div></div>
+    <div class="panel" style="--hc:#9b5cff"><div class="ph">Notes and Credits</div><div class="pb">
+      <p>Built for the NASA Space Apps 2026 challenge "Space Mission Design Game": design, manage and simulate a space mission while balancing budget, mass, power, data, communications and orbit, alone or as a team of up to 4.</p>
+      <p>Real science inside: Moon ice in dark south-pole craters and 14-day lunar nights; Mars launch windows every 26 months and NASA's MOXIE oxygen maker; Jupiter's sunlight about 25 times weaker, Juno's radiation vault and Europa Clipper's looping orbit; the James Webb Space Telescope reading planet atmospheres. The Mystery Planet clues are pretend: no planet beyond Earth has confirmed signs of life.</p>
+    </div></div>
+    <div class="panel" style="--hc:#14b8a6"><div class="ph">Mission log</div><div class="pb"><ul id="log"><li><span>—</span>Click the green flag to start.</li></ul></div></div>
+    <div class="panel wide" style="--hc:#ff5c8a"><div class="ph">Sources and License</div><div class="pb">
+      <p>Space facts in this game come from these sources. Numbers are simplified for the game.</p>
+      <ul class="src">
+        <li>Moon ice in dark south-pole craters: <a href="https://nssdc.gsfc.nasa.gov/planetary/ice/ice_moon.html" target="_blank" rel="noopener">NASA NSSDC, Ice on the Moon</a></li>
+        <li>MOXIE making oxygen from Mars air: <a href="https://aeroastro.mit.edu/news-impact/oxygen-generating-experiment-moxie-completes-mars-mission" target="_blank" rel="noopener">MIT AeroAstro, MOXIE completes Mars mission</a></li>
+        <li>Mars launch windows (about every 26 months): <a href="https://en.wikipedia.org/wiki/Launch_window" target="_blank" rel="noopener">Launch window (Wikipedia)</a></li>
+        <li>Airbag landings for small rovers: <a href="https://www.jpl.nasa.gov/images/pia04852-air-bag-installation/" target="_blank" rel="noopener">NASA JPL, Mars Exploration Rover airbags</a></li>
+        <li>Growing food in space: <a href="https://www.scientificamerican.com/article/astronauts-take-first-bites-of-lettuce-grown-in-space/" target="_blank" rel="noopener">Scientific American, lettuce grown on the Space Station</a></li>
+        <li>Juno's radiation vault: <a href="https://www.jpl.nasa.gov/news/juno-armored-up-to-go-to-jupiter/" target="_blank" rel="noopener">NASA JPL, Juno armored up to go to Jupiter</a></li>
+        <li>Europa Clipper's looping orbit and flybys: <a href="https://www.jpl.nasa.gov/news/8-things-to-know-about-nasas-mission-to-an-ocean-moon-of-jupiter/" target="_blank" rel="noopener">NASA JPL, 8 things to know about Europa Clipper</a> · <a href="https://www.jpl.nasa.gov/images/pia26436-europa-clippers-elliptical-orbit/" target="_blank" rel="noopener">Europa Clipper's orbit</a></li>
+        <li>Webb studying TRAPPIST-1e's atmosphere: <a href="https://www.stsci.edu/contents/news-releases/2025/news-2025-109" target="_blank" rel="noopener">STScI, Webb looks at TRAPPIST-1 e</a></li>
+        <li>General facts (lunar day and night, Jupiter's sunlight and radiation, light travel times, Proxima b): <a href="https://science.nasa.gov/" target="_blank" rel="noopener">NASA Science</a></li>
+      </ul>
+      <p style="margin-top:8px"><b>Tools:</b> fonts Fredoka and Nunito from Google Fonts (SIL Open Font License). Game code written with help from Claude, an AI assistant. <b>License:</b> this game is open source under the MIT License.</p>
+    </div></div>
+  </div>
+</div>
+<div id="pop" hidden role="dialog"></div>
+
+<script>
+(() => {
+const $ = (s, el = document) => el.querySelector(s);
+const stage = $('#stage'), content = $('#content'), bubble = $('#bubble'), mons = $('#monitors'), box = $('#stagebox');
+const SW = 640, SH = 480;
+function fit(){ const w = box.clientWidth, hgt = box.clientHeight; const s = Math.min(w/SW, hgt/SH);
+  stage.style.transform = `translate(${(w-SW*s)/2}px,${(hgt-SH*s)/2}px) scale(${s})`; }
+new ResizeObserver(fit).observe(box); fit();
+$('#fs').onclick = () => { try { if (document.fullscreenElement) document.exitFullscreen(); else box.requestFullscreen?.().catch(()=>{}); } catch(e){} };
+const store = { get(k, d){ try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch(e){ return d; } }, set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} } };
+
+function h(tag, attrs = {}, ...kids){ const el = document.createElement(tag);
+  for (const [k,v] of Object.entries(attrs||{})) { if (v == null || v === false) continue;
+    if (k.startsWith('on')) el[k] = v; else if (k === 'class') el.className = v; else if (k === 'style') el.style.cssText = v; else el.setAttribute(k, v === true ? '' : v); }
+  for (const k of kids.flat()) if (k != null && k !== false) el.append(k.nodeType ? k : document.createTextNode(String(k)));
+  return el; }
+let RUN = 0; class Cancel extends Error {}
+const alive = t => { if (t !== RUN) throw new Cancel(); };
+const sleep = ms => { const t = RUN; return new Promise(r => setTimeout(r, ms)).then(() => alive(t)); };
+const shuffle = a => { a = a.slice(); for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const clear = (full) => { content.replaceChildren(); content.classList.toggle('full', !!full); hideClue(); stage.querySelectorAll('.burst').forEach(b => b.remove()); };
+const say = t => { bubble.textContent = t || ''; bubble.hidden = !t; $('#sprite').style.display = t ? '' : 'none'; };
+let t0 = Date.now();
+function log(msg){ const L = $('#log'); const sec = Math.round((Date.now()-t0)/1000);
+  L.append(h('li', {}, h('span', {}, `${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}`), msg)); L.scrollTop = L.scrollHeight; }
+function setMon(list){ mons.replaceChildren(...list.map(([l,v,cls]) => h('div', {class:'mon '+(cls||'')}, l, h('i', {}, v)))); }
+function choose(opts, where = content){
+  return new Promise(res => { const row = h('div', {class:'btnrow'});
+    opts.forEach(o => row.append(h('button', {class:'sbtn '+(o.color||'blue')+(o.sm?' sm':''), disabled:o.disabled, onclick:() => { row.querySelectorAll('button').forEach(b=>b.disabled=true); res(o.value); }}, o.label)));
+    where.append(row); }); }
+const next = (label = 'Next ›', color = 'green') => choose([{label, value:1, color}]);
+function card({kind, title, text, lines, think, why, pc}){
+  return h('div', {class:'card', style: pc ? `--pc:${pc}` : null},
+    kind && h('div', {class:'k'}, kind), title && h('h3', {}, title), text && h('p', {}, text),
+    lines && h('ul', {}, lines.map(([c,t]) => h('li', {class:c}, t))),
+    why && h('div', {class:'why'}, h('b', {}, 'Why it matters: '), why),
+    think && h('div', {class:'think'}, h('b', {}, 'Think: '), think)); }
+function ask(q){ const t = RUN; return new Promise(res => { const A = $('#ask'), inp = $('#askin'); $('#askq').textContent = q; inp.value=''; A.hidden=false; bubble.hidden=true; $('#sprite').style.display='none';
+  const done = () => { if (t!==RUN) return; A.hidden = true; res(inp.value.trim()); };
+  $('#askok').onclick = done; inp.onkeydown = e => { if (e.key==='Enter') done(); }; setTimeout(()=>inp.focus({preventScroll:true}), 50); }); }
+async function rollDie(where = content){ const d = h('div', {class:'die'}, '?'); where.append(d); let v = 1;
+  for (let i=0;i<8;i++){ v = 1+Math.floor(Math.random()*6); d.textContent = v; await sleep(70); } return v; }
+function burst(){ const b = h('div',{class:'burst'}); for (let i=0;i<26;i++){ const a = Math.random()*Math.PI*2, r = 120+Math.random()*200;
+  b.append(h('span',{style:`--dx:${Math.cos(a)*r}px;--dy:${Math.sin(a)*r}px;animation-delay:${Math.random()*.3}s;color:${['#ffd23f','#ff5c8a','#5fe1ff','#33b864','#9b5cff'][i%5]}`}, '★')); }
+  stage.append(b); setTimeout(()=>b.remove(), 2200); }
+function overlay(...kids){ const O = $('#overlay'); O.replaceChildren(h('div',{class:'dialog', role:'dialog'}, ...kids)); O.hidden = false; return O; }
+const closeOverlay = () => { $('#overlay').hidden = true; };
+
+const WORDS = {
+ 'mass':'How heavy something is. A rocket can only lift so much mass.',
+ 'power':'Electricity. Solar panels and generators make it; machines use it.',
+ 'payload':'Everything the rocket carries: habitat, machines and instruments.',
+ 'radiation':'Invisible energy from the Sun and Jupiter that can damage robots and people.',
+ 'orbit':'The path a spacecraft takes as it circles a planet or moon.',
+ 'data':'Information your instruments collect, like photos and measurements.',
+ 'antenna':'Sends your data and messages back to Earth. A bigger antenna sends more.',
+ 'light-year':'How far light travels in one year: about 6 trillion miles.',
+ 'launch window':'The best time to launch, when the planets line up for a short trip.',
+ 'budget':'The coins you can spend on your mission.',
+ 'habitat':'The home where astronauts live and work.',
+ 'simulate':'Test your plan on the computer before doing it for real.',
+ 'rocket':'The vehicle that lifts your spacecraft off Earth. Bigger rockets carry more but cost more.'};
+function linkify(text){ const frag = document.createDocumentFragment(); let rest = text; const used = new Set();
+  while (rest.length){ let best = null;
+    for (const w of Object.keys(WORDS)){ if (used.has(w)) continue; const m = new RegExp(`\\b${w.replace('-','\\-')}s?\\b`, 'i').exec(rest); if (m && (!best || m.index < best.i)) best = {i:m.index, len:m[0].length, w}; }
+    if (!best){ frag.append(rest); break; }
+    frag.append(rest.slice(0, best.i)); const word = rest.substr(best.i, best.len); const ww = best.w;
+    frag.append(h('button',{class:'term', type:'button', onclick:e => showWord(ww, e.currentTarget)}, word)); used.add(ww); rest = rest.slice(best.i + best.len); }
+  return frag; }
+function showWord(w, el){ const p = $('#pop'); p.replaceChildren(h('b',{}, w[0].toUpperCase()+w.slice(1)), WORDS[w]); p.hidden = false;
+  const r = el.getBoundingClientRect(); p.style.left = Math.max(8, Math.min(innerWidth-300, r.left)) + 'px'; p.style.top = (r.bottom + 6) + 'px'; }
+document.addEventListener('click', e => { if (!e.target.closest('.term') && !e.target.closest('#pop')) $('#pop').hidden = true; });
+$('#wordsbtn').onclick = () => overlay(h('h3',{}, 'Space words'), h('ul',{class:'plain'}, Object.entries(WORDS).map(([w,d]) => h('li',{}, h('b',{}, w[0].toUpperCase()+w.slice(1)+': '), d))), h('div',{class:'btnrow'}, h('button',{class:'sbtn blue', onclick:closeOverlay}, 'Close')));
+let JOB = {do:'', why:''};
+const STEPNAMES = ['Briefing','Research','Prepare','Explore','Sustain','Score'];
+function setJob(step, doT, whyT, sub){ JOB = {do:doT, why:whyT};
+  $('#steps').replaceChildren(...STEPNAMES.map((n,i) => h('div',{class:'stp'+(step==null?'':i<step?' done':i===step?' now':'')}, h('i',{}, step!=null && i<step ? '✓' : i===0 ? '★' : i), n)), h('span',{class:'sub'}, sub || ''));
+  $('#job').replaceChildren(h('b',{}, 'Do:'), h('span',{}, linkify(doT)), h('b',{}, 'Why:'), h('span',{}, linkify(whyT))); }
+const setMin = m => { $('#guide').classList.toggle('min', m); $('#tipsbtn').textContent = m ? 'Show tips' : 'Hide tips'; };
+$('#tipsbtn').onclick = () => setMin(!$('#guide').classList.contains('min'));
+if (innerWidth < 700) setMin(true);
+const canSpeak = 'speechSynthesis' in window && typeof SpeechSynthesisUtterance !== 'undefined';
+if (!canSpeak) $('#readbtn').hidden = true;
+$('#readbtn').onclick = () => { try { speechSynthesis.cancel(); const txt = [JOB.do, JOB.why, bubble.hidden ? '' : bubble.textContent, content.innerText].join('. ').replace(/\s+/g,' ').slice(0, 900);
+  const u = new SpeechSynthesisUtterance(txt); u.rate = .95; speechSynthesis.speak(u); } catch(e){} };
+
+function rng(seed){ return () => (seed = (seed*16807) % 2147483647) / 2147483647; }
+function drawBackdrop(kind){
+  const c = $('#bg'), x = c.getContext('2d'); x.setTransform(2,0,0,2,0,0); x.clearRect(0,0,SW,SH);
+  const skies = {title:['#2a0f6b','#6d2fd6','#ff6fb5'], moon:['#0b1446','#2b2f8f','#6a4cc9'], mars:['#3b1c6b','#d9558a','#ffad5c'], jupiter:['#081a4a','#1f4fb8','#45c4e8'], mystery:['#2a0a52','#8a2be2','#ff5fa2']};
+  const sk = skies[kind]; const g = x.createLinearGradient(0,0,0,SH); g.addColorStop(0, sk[0]); g.addColorStop(.6, sk[1]); g.addColorStop(1, sk[2]); x.fillStyle = g; x.fillRect(0,0,SW,SH);
+  const neb = (cx,cy,r,col) => { const n = x.createRadialGradient(cx,cy,4,cx,cy,r); n.addColorStop(0,col); n.addColorStop(1,'rgba(0,0,0,0)'); x.fillStyle=n; x.fillRect(0,0,SW,SH); };
+  neb(120,90,220,'rgba(95,225,255,.25)'); neb(520,140,240,'rgba(255,92,138,.22)');
+  const r = rng(kind.length*977+13);
+  for (let i=0;i<170;i++){ const sx=r()*SW, sy=r()*SH*(kind==='mars'?.6:1), sr=r()*1.6+.3; x.globalAlpha=.4+r()*.6; x.fillStyle=['#fff','#fff','#ffe9a8','#b8f0ff'][i%4]; x.beginPath(); x.arc(sx,sy,sr,0,7); x.fill();
+    if (sr>1.6){ x.globalAlpha=.5; x.fillRect(sx-4,sy-.4,8,.8); x.fillRect(sx-.4,sy-4,.8,8); } } x.globalAlpha = 1;
+  const circ = (cx,cy,rad,fill) => { x.beginPath(); x.arc(cx,cy,rad,0,Math.PI*2); x.fillStyle = fill; x.fill(); };
+  const glow = (cx,cy,rad,col) => { const gg = x.createRadialGradient(cx,cy,rad*.8,cx,cy,rad*1.6); gg.addColorStop(0,col); gg.addColorStop(1,'rgba(0,0,0,0)'); x.fillStyle=gg; x.fillRect(cx-rad*2,cy-rad*2,rad*4,rad*4); };
+  if (kind==='title'){ glow(70,520,240,'rgba(90,180,255,.6)'); const e = x.createRadialGradient(40,470,40,70,520,240); e.addColorStop(0,'#5fb0ff'); e.addColorStop(.8,'#1e5fd0'); e.addColorStop(1,'#16408f'); circ(70,520,240,e);
+    x.fillStyle='#3fd07a'; x.beginPath(); x.ellipse(70,430,46,18,-.4,0,7); x.fill(); x.beginPath(); x.ellipse(200,455,36,14,.3,0,7); x.fill();
+    glow(600,430,26,'rgba(255,210,63,.6)'); circ(600,430,22,'#ffe16b'); }
+  if (kind==='moon'){ glow(540,80,30,'rgba(95,176,255,.7)'); circ(540,80,28,'#3d8bff'); x.fillStyle='#3fd07a'; x.beginPath(); x.ellipse(534,74,13,8,.4,0,7); x.fill(); x.beginPath(); x.ellipse(550,92,8,5,.2,0,7); x.fill();
+    const m = x.createLinearGradient(0,330,0,480); m.addColorStop(0,'#c9cbe0'); m.addColorStop(1,'#7c7fa6'); x.fillStyle=m; x.beginPath(); x.ellipse(320,800,560,480,0,0,7); x.fill();
+    [[80,400,34],[240,440,18],[440,385,26],[570,440,40],[350,465,13]].forEach(([a,b,s])=>{ x.fillStyle='#8f92b8'; x.beginPath(); x.ellipse(a,b,s,s*.35,0,0,7); x.fill(); x.fillStyle='#e2e3f2'; x.beginPath(); x.ellipse(a,b-2,s*.8,s*.2,0,0,7); x.fill(); }); }
+  if (kind==='mars'){ glow(520,150,18,'rgba(255,240,200,.8)'); circ(520,150,12,'#fff3d6');
+    x.fillStyle='#b8452e'; x.beginPath(); x.moveTo(0,330); x.lineTo(90,285); x.lineTo(190,325); x.lineTo(300,265); x.lineTo(420,320); x.lineTo(530,280); x.lineTo(640,312); x.lineTo(640,480); x.lineTo(0,480); x.fill();
+    const m = x.createLinearGradient(0,340,0,480); m.addColorStop(0,'#e0703e'); m.addColorStop(1,'#a43c1f'); x.fillStyle=m; x.beginPath(); x.moveTo(0,365); x.quadraticCurveTo(320,330,640,372); x.lineTo(640,480); x.lineTo(0,480); x.fill();
+    x.fillStyle='#8f3218'; for (let i=0;i<22;i++){ x.beginPath(); x.ellipse(r()*SW, 385+r()*90, 3+r()*8, 2+r()*3, 0, 0, 7); x.fill(); } }
+  if (kind==='jupiter'){ glow(560,190,210,'rgba(255,200,140,.45)'); x.save(); x.beginPath(); x.arc(560,190,210,0,7); x.clip();
+    const bands = ['#fbe6c2','#e3a46b','#fff1d8','#d1844f','#f7dcae','#c56d3a','#fbe7c6','#e3a46b','#f3d29e','#c97a46','#fbe6c2'];
+    bands.forEach((b,i)=>{ x.fillStyle=b; x.fillRect(340,-30+i*42,450,44); });
+    x.fillStyle='#e0553a'; x.beginPath(); x.ellipse(470,250,34,17,0,0,7); x.fill(); x.fillStyle='rgba(30,10,60,.22)'; x.beginPath(); x.arc(630,250,230,0,7); x.fill(); x.restore();
+    glow(110,330,22,'rgba(200,240,255,.7)'); circ(110,330,20,'#f2ecdc'); x.strokeStyle='#c9956f'; x.lineWidth=1.2; for (let i=0;i<5;i++){ x.beginPath(); x.moveTo(96+i*6,318+i*3); x.lineTo(114+i*3,345-i*2); x.stroke(); } }
+  if (kind==='mystery'){ neb(220,230,300,'rgba(255,120,220,.4)');
+    glow(110,90,36,'rgba(255,120,80,.8)'); const s = x.createRadialGradient(110,90,2,110,90,38); s.addColorStop(0,'#fff6e0'); s.addColorStop(.3,'#ff7a4a'); s.addColorStop(1,'rgba(255,90,60,0)'); circ(110,90,38,s);
+    glow(490,320,110,'rgba(127,240,210,.5)'); const p = x.createRadialGradient(460,290,10,490,320,110); p.addColorStop(0,'#a6ffe4'); p.addColorStop(.6,'#2fb0a5'); p.addColorStop(1,'#145a6a'); circ(490,320,110,p);
+    x.fillStyle='rgba(255,255,255,.4)'; x.beginPath(); x.ellipse(465,285,55,9,-.2,0,7); x.fill(); x.beginPath(); x.ellipse(505,350,42,7,-.2,0,7); x.fill(); }
+}
+
+const PC = {moon:'#5a5fd6', mars:'#e0553a', jupiter:'#d1844f', mystery:'#9b5cff'};
+const ORB = {moon:'radial-gradient(circle at 35% 35%,#ffffff,#a4a8cf)', mars:'radial-gradient(circle at 35% 35%,#ffa36b,#c2401f)', jupiter:'repeating-linear-gradient(170deg,#fbe6c2 0 11px,#e3a46b 11px 19px,#fff1d8 19px 28px,#c97a46 28px 34px)', mystery:'radial-gradient(circle at 35% 35%,#b6ffe9,#1f8f90)'};
+const GLOW = {moon:'rgba(200,210,255,.7)', mars:'rgba(255,120,80,.7)', jupiter:'rgba(255,190,120,.7)', mystery:'rgba(120,255,220,.7)'};
+const CAT = {rocket:['Rocket','var(--c-rocket)'], power:['Power','var(--c-power)'], water:['Water','var(--c-water)'], life:['Life support','var(--c-life)'], science:['Science','var(--c-science)'], comms:['Comms','var(--c-comms)'], safety:['Safety','var(--c-safety)']};
+const ROLES = {planner:['Mission Planner','#ff5c8a'], engineer:['Spacecraft Engineer','#e0a800'], science:['Science Officer','#9b5cff'], life:['Life Support & Comms','#3d8bff']};
+const CATROLE = {rocket:'engineer', power:'engineer', science:'science', water:'life', life:'life', comms:'life', safety:'planner'};
+const ROLESPLIT = {1:[['planner','engineer','science','life']], 2:[['planner','science'],['engineer','life']], 3:[['planner'],['engineer'],['science','life']], 4:[['planner'],['engineer'],['science'],['life']]};
+const P = {
+ moon:{name:'Moon', stars:1, next:'mars', budget:30, mission:'Build the First Base', crew:'2 astronauts', tank:3,
+  goal:'Land 2 astronauts, make water from Moon ice, survive a lunar day and a lunar night, and save extra water as rocket fuel for Mars.',
+  challenges:['The night lasts 14 Earth days, and solar panels stop in the dark.','Sharp Moon dust sticks to everything.','Solar flares blast radiation at the crew.'],
+  thinks:['Where is the ice?','How will you make power at night?','Will you keep a coin for surprises?'],
+  objs:{a:['Water Base','Make as much water from Moon ice as you can.'], b:['Fuel Depot','Save extra water as rocket fuel for the trip to Mars.']},
+  sites:[
+   {id:'pole', name:'South Pole Crater Rim', water:4, lines:[['good','LOTS of ice: Drill + Melter make 4 water per turn.'],['good','The Sun almost always shines on the rim, so solar works at night.'],['bad','Freezing cold and rocky.']], think:'Why might the hardest place to land be the best place to live?'},
+   {id:'equator', name:'Equator', water:3, lines:[['good','Flat and easy: no Boulder Field, and only 2 surprise events.'],['info','Some ice: 3 water per turn.'],['bad','Night lasts 14 Earth days. Plan night power!']], think:'Is the easiest place to land the best place to live?'},
+   {id:'far', name:'Far Side', water:3, lines:[['good','Quiet for radio telescopes: +10 points.'],['bad','Earth is out of sight: you MUST buy a Relay Satellite.'],['bad','Some ice (3 water) and a 14-day night.']], think:'How do you talk to Earth if Earth is behind the Moon?'}],
+  rockets:[{id:'small',name:'Small Rocket',cost:3,carry:11},{id:'medium',name:'Medium Rocket',cost:5,carry:13},{id:'large',name:'Large Rocket',cost:8,carry:16}],
+  parts:[
+   {id:'habitat',cat:'life',name:'Habitat',cost:4,mass:4,power:-1,must:true,text:'Home for 2 astronauts. MUST bring. It must always have power.'},
+   {id:'drill',cat:'water',name:'Ice Drill',cost:3,mass:2,power:-2,text:'Digs up icy Moon soil. It needs the Melter too.'},
+   {id:'melter',cat:'water',name:'Ice Melter',cost:2,mass:2,power:-2,text:'Turns ice into water. Drill AND Melter must both be on to make water.'},
+   {id:'solar',cat:'power',name:'Solar Panel',cost:2,mass:1,power:3,multi:true,text:'+3 power from the Sun. Stops in the dark. You can buy more than one.'},
+   {id:'battery',cat:'power',name:'Battery Pack',cost:2,mass:2,power:0,night:3,multi:true,text:'Stores sunlight: +3 power at NIGHT only. Needs at least 1 Solar Panel to charge.'},
+   {id:'nuclear',cat:'power',name:'Nuclear Generator',cost:6,mass:4,power:5,text:'+5 power, day AND night. Heavy and costly.'},
+   {id:'cleaner',cat:'safety',name:'Dust Cleaner',cost:1,mass:1,power:0,text:'Brushes sticky Moon dust off your machines.'},
+   {id:'shelter',cat:'safety',name:'Storm Shelter',cost:2,mass:2,power:0,text:'Thick walls protect astronauts from solar flares.'},
+   {id:'relay',cat:'comms',name:'Relay Satellite',cost:3,mass:0,power:0,text:'Flies on its own small rocket (0 mass) and stays in orbit. Needed on the Far Side.'}]},
+ mars:{name:'Mars', stars:2, next:'jupiter', budget:40, mission:'Live on Another Planet', crew:'4 astronauts', tank:6,
+  goal:'Keep 4 astronauts alive and fed for 4 seasons (one year) using water found on Mars.',
+  challenges:['Dust storms cut solar power in half.','4 astronauts need water, air and food every season.','Messages from Earth take up to 22 minutes.'],
+  thinks:['How will you save water?','What will the crew eat for 4 seasons?','Which rocket can carry it all?'],
+  objs:{a:['Long Stay','Keep the crew healthy and fed all year.'], b:['Science Expedition','Find as much science as you can: rovers, greenhouse, riverbed.']},
+  sites:[
+   {id:'pole', name:'Near the Pole', water:5, lines:[['good','LOTS of ice: Drill + Melter make 5 water.'],['bad','Weak winter sun: solar −1 each in Winter.'],['bad','Extremely cold.']], think:'Which is harder to bring from Earth: water or sunshine?'},
+   {id:'mid', name:'Middle of Mars', water:4, lines:[['good','Ice just under the ground: 4 water.'],['good','Medium sunshine.'],['info','The balanced choice.']], think:'Why do engineers often pick the in-between option?'},
+   {id:'equator', name:'Equator', water:1, lines:[['good','Sunniest: each solar panel makes +1 extra.'],['bad','Almost no ice: only 1 water. A Soil Oven helps.']], think:'What would you need to bring if there is no ice?'}],
+  rockets:[{id:'medium',name:'Medium Rocket',cost:6,carry:17},{id:'large',name:'Large Rocket',cost:9,carry:19},{id:'super',name:'Super Heavy',cost:12,carry:22}],
+  parts:[
+   {id:'habitat',cat:'life',name:'Habitat',cost:5,mass:4,power:-1,must:true,text:'Home for 4 astronauts. MUST bring. It must always have power.'},
+   {id:'parachute',cat:'safety',name:'Parachute + Rockets',cost:3,mass:2,power:0,land:true,text:'Landing system. Safe for any weight.'},
+   {id:'airbags',cat:'safety',name:'Airbags',cost:1,mass:1,power:0,land:true,text:'Cheap landing system, but only for light missions (mass 8 or less). NASA used airbags for small rovers.'},
+   {id:'lradar',cat:'safety',name:'Landing Radar',cost:2,mass:1,power:0,text:'Spots rocks during landing so the lander can steer around them. Without it, a die roll of 1 at landing breaks 1 machine.'},
+   {id:'drill',cat:'water',name:'Ice Drill',cost:3,mass:2,power:-2,text:'Digs up buried ice. It needs the Melter too.'},
+   {id:'melter',cat:'water',name:'Ice Melter',cost:2,mass:2,power:-2,text:'Turns ice into water. Drill AND Melter must both be on.'},
+   {id:'oven',cat:'water',name:'Soil Oven',cost:3,mass:3,power:-3,text:'Bakes 3 water out of Mars dirt at any site. No drill needed.'},
+   {id:'recycler',cat:'water',name:'Water Recycler',cost:5,mass:3,power:-2,text:'Cleans used water: the crew needs only 2 drinking water, not 4.'},
+   {id:'oxygen',cat:'life',name:'Oxygen Maker',cost:3,mass:2,power:-2,text:'Makes oxygen from Mars air, like NASA\'s MOXIE. Then no water is used for air.'},
+   {id:'crate',cat:'life',name:'Food Crate',cost:1,mass:1,power:0,multi:true,text:'Packed meals: feeds the crew for 1 season. Buy one for each season you won\'t grow food.'},
+   {id:'greenhouse',cat:'life',name:'Greenhouse',cost:4,mass:3,power:-1,text:'Grows 1 Food per season from Season 2. Uses 1 water per season. +10 points.'},
+   {id:'solar',cat:'power',name:'Solar Panel',cost:2,mass:1,power:3,multi:true,text:'+3 power. Dust storms cut it in half. You can buy more than one.'},
+   {id:'nuclear',cat:'power',name:'Nuclear Generator',cost:6,mass:4,power:5,text:'+5 steady power through storms and winter.'},
+   {id:'selfrover',cat:'science',name:'Self-Driving Rover',cost:4,mass:3,power:0,text:'Drives itself, even when messages from Earth are slow.'},
+   {id:'remrover',cat:'science',name:'Remote Rover',cost:2,mass:3,power:0,text:'Cheaper, but must wait up to 22 minutes for orders from Earth.'}]},
+ jupiter:{name:'Jupiter', stars:3, next:'mystery', budget:45, mission:'Robots to the Ocean Moons', crew:'Robot only', health:11,
+  goal:'Jupiter is made of gas, so nothing can land on it. Send a robot to an icy moon, pick its orbit, keep it working for 4 years, and send data home.',
+  challenges:['Sunlight is about 25 times weaker than on Earth.','Strong radiation hurts the robot every year.','Messages take almost an hour to reach Earth.'],
+  thinks:['What power works far from the Sun?','How will you protect the robot?','Can your antenna send all your data home?'],
+  objs:{a:['Ocean Explorer','Send home as much ocean data as possible.'], b:['Careful Explorer','Send data home AND bring the robot through healthy.']},
+  sites:[
+   {id:'europa', name:'Europa', ppd:6, rad:2, lines:[['good','Ocean under the ice: 6 points per data packet.'],['bad','Radiation VERY HIGH: −2 Health a year.']], think:'Is the most exciting place worth the most danger?'},
+   {id:'ganymede', name:'Ganymede', ppd:5, rad:1, lines:[['good','Biggest moon, with an ocean: 5 points per data packet.'],['info','Radiation medium: −1 Health a year.']], think:'Why pick the safer-but-still-good moon?'},
+   {id:'callisto', name:'Callisto', ppd:4, rad:0, lines:[['good','Lowest radiation: −0 Health a year.'],['info','Old, quiet ice: 4 points per data packet.']], think:'Safe and slow, or risky and exciting?'}],
+  orbits:[
+   {id:'far', name:'Far orbit around Jupiter', rad:-2, data:-1, cost:0, mass:0, lines:[['good','Stays far from the radiation belts: 2 less Health lost a year.'],['bad','Far from the moon: 1 less data packet a year.']], think:'Is safe-and-slow a good trade?'},
+   {id:'loop', name:'Loop around Jupiter', rad:0, data:0, cost:0, mass:0, lines:[['good','Swoops past the moon many times, then escapes the worst radiation.'],['info','Normal radiation and data. Like NASA\'s real Europa Clipper!']], think:'Why would NASA loop around Jupiter instead of circling the moon?'},
+   {id:'moonorbit', name:'Orbit the moon itself', rad:1, data:2, cost:3, mass:1, lines:[['good','Close to the ice all the time: +2 data packets a year.'],['bad','1 more Health lost a year, and braking fuel costs 3 coins and 1 mass.']], think:'How much danger is worth extra science?'}],
+  rockets:[{id:'heavy',name:'Heavy Rocket',cost:10,carry:13},{id:'super',name:'Super Heavy',cost:14,carry:16}],
+  parts:[
+   {id:'body',cat:'life',name:'Robot Body',cost:6,mass:3,power:-2,must:true,text:'Computer brain and thrusters. MUST bring. It must always have power.'},
+   {id:'wings',cat:'power',name:'Giant Solar Wings',cost:5,mass:4,power:2,text:'Sunlight at Jupiter is about 25 times weaker, so the wings are HUGE, like Juno\'s.'},
+   {id:'nuclear',cat:'power',name:'Nuclear Generator',cost:8,mass:3,power:5,text:'+5 steady power far from the Sun.'},
+   {id:'vault',cat:'safety',name:'Radiation Vault',cost:4,mass:3,power:0,text:'A metal box that shields the robot\'s brain: lose 1 less Health each year.'},
+   {id:'tank',cat:'rocket',name:'Extra Fuel Tank',cost:3,mass:2,power:0,text:'Use it ONCE: the fast route OR a surprise dive.'},
+   {id:'big',cat:'comms',name:'Big Antenna',cost:4,mass:2,power:-1,text:'Sends up to 3 data packets home each year.'},
+   {id:'small',cat:'comms',name:'Small Antenna',cost:1,mass:1,power:-1,text:'Sends 1 data packet a year. No antenna = no data reaches Earth!'},
+   {id:'camera',cat:'science',name:'Camera',cost:2,mass:1,power:-1,text:'Makes 1 data packet each year.'},
+   {id:'radar',cat:'science',name:'Ice Radar',cost:5,mass:2,power:-2,text:'Sees through the ice to the ocean: 1 data packet each year.'}]},
+ mystery:{name:'Mystery Planet', stars:4, next:null, budget:40, mission:'Is Anyone Out There?', crew:'Telescopes + future probe',
+  goal:'Planets around other stars are too far to visit today. Collect telescope data (clue cards), then decide carefully if the planet could have water or life.',
+  challenges:['The planet is too far for people to visit.','Some clues can fool you.','Telescope time costs a lot of coins.'],
+  thinks:['Which clues would really mean life?','How many clues can you afford?','What should future scientists find out?'],
+  objs:{a:['Clue Hunter','Collect the most clues and read them well.'], b:['Future Planner','Read the clues and plan for the scientists after you (a probe or savings).']},
+  sites:[
+   {id:'proxima', name:'Proxima b', lines:[['good','The closest known planet beyond our Sun: about 4 light-years.'],['bad','Its red star throws big flares.']], think:'Does closest mean best?'},
+   {id:'trappist', name:'TRAPPIST-1e', lines:[['good','Rocky, Earth-sized, maybe just right for liquid water.'],['info','About 40 light-years away. Its star has 7 planets!']], think:'What makes a planet just right for water?'},
+   {id:'x', name:'Planet X', lines:[['info','A made-up mystery world, just found.'],['good','1 free extra Air Clue.'],['bad','You know nothing about its temperature.']], think:'Would you study a planet you know almost nothing about?'}],
+  rockets:[],
+  parts:[
+   {id:'scope',cat:'science',name:'Space Telescope Time',cost:12,text:'Like NASA\'s James Webb. Reads the air: draw 2 Air Clues.'},
+   {id:'extra',cat:'science',name:'Extra Telescope Time',cost:8,text:'Look again: draw 1 more Air Clue.'},
+   {id:'ground',cat:'science',name:'Giant Ground Telescope',cost:6,text:'Measures size and heat: draw 1 Planet Clue.'},
+   {id:'watcher',cat:'science',name:'Star Watcher',cost:4,text:'Studies the star. If Star Flares is in the Planet Clue pile, you find it.'},
+   {id:'probe',cat:'rocket',name:'Light-Sail Probe',cost:20,only:'proxima',text:'A FUTURE idea: a tiny laser-pushed probe. Reaches Proxima b in about 20 years. Proxima b only.'},
+   {id:'double',cat:'safety',name:'Double Check',cost:3,text:'Put back one clue you drew and draw again.'}]}
+};
+const AIR = [
+ {id:'water',t:'Water Vapor',d:'Water in the air! A good sign, but is it liquid on the ground? Check the temperature.'},
+ {id:'oxygen',t:'Oxygen',d:'Plants make oxygen, but starlight can also make it with no life at all. One clue isn\'t proof!'},
+ {id:'methane',t:'Methane',d:'Living things make methane, but so do volcanoes. Tricky!'},
+ {id:'both',t:'Oxygen + Methane',d:'Both at once! They destroy each other, so something keeps making them. A strong hint.'},
+ {id:'co2',t:'Carbon Dioxide',d:'A thick atmosphere. A good start, but not a sign of life by itself.'}];
+const PLANET = [
+ {id:'hot',t:'Too Hot!',d:'Hotter than boiling water. Liquid water is unlikely.'},
+ {id:'right',t:'Just Right',d:'The temperature allows liquid water on the surface.'},
+ {id:'flares',t:'Star Flares',d:'Huge flares hit the planet often. Its air may be getting blown away.'}];
+const SORTK = {water:'hint', both:'hint', right:'hint', oxygen:'notproof', methane:'notproof', co2:'notproof', hot:'bad', flares:'bad'};
+const SORTN = {hint:'Hint of life', notproof:'Not proof', bad:'Bad news'};
+const SORTWHY = {water:'Water is needed for life as we know it.', both:'Something must keep making both gases.', right:'Liquid water can exist there.', oxygen:'Starlight can make oxygen with no life.', methane:'Volcanoes make methane too.', co2:'Lots of lifeless planets have it.', hot:'Too hot for liquid water.', flares:'Flares can strip away the air.'};
+const ORDER = ['moon','mars','jupiter','mystery'];
+const CLUES = {
+ moon:{0:['Every player can tap Clues. First, decide how many explorers are playing.','Read the challenges: the 14-day night is the biggest one on the Moon.','Water Base scores Moon water. Fuel Depot scores rocket fuel. Pick the one you want to try.'],
+   1:['What does your crew need most on the Moon? Look for the word "ice".','Which spot keeps the Sun shining even at night?','The South Pole is the easiest start. The Equator and Far Side need extra power for the 14-day night.'],
+   2:['Pack parts first, then pick the rocket. Start with the MUST parts.','Your Drill and Melter only make water when BOTH are on. Night lasts 14 days: what makes power when the Sun is down?','Night power must be at least what your machines use. Batteries (with a solar panel) or a Nuclear Generator work at night. Then pick the smallest rocket that fits.'],
+   3:['Surprise events test your packing. Did you bring something for dust and solar flares?','If you kept 1 coin, you can pay for a safe-landing photo.','A Dust Cleaner and a Storm Shelter make most Moon events harmless.'],
+   4:['Watch the water tank gauge. Extra water can become rocket fuel or stay in the tank.','If the night will be hard, keep extra water in the tank.','Each rocket fuel is worth points. Water in the tank keeps the crew safe.']},
+ mars:{0:['Read the challenges first: water, air and food for 4 astronauts.','Long Stay rewards keeping everyone fed. Science Expedition rewards rovers, the greenhouse and the riverbed.','Both objectives need the crew to stay safe first.'],
+   1:['Mars water is frozen. Where is there lots of ice?','The Equator is sunny but dry. What could bake water out of dirt?','Any site can win if your parts match it.'],
+   2:['Pack the MUST parts and a landing system first, then pick the rocket.','4 astronauts need 6 water a season. A Recycler or Oxygen Maker cuts that down.','Food: a crate for every season, or a Greenhouse (food from Season 2) plus 1 crate for Spring. Dust storms halve solar power, so make extra power.'],
+   3:['Messages take up to 22 minutes. Can your rover think for itself?','Nuclear power doesn\'t care about dust.','A rover can reach the ancient riverbed for bonus points.'],
+   4:['When power is short, which machines keep the crew alive?','Water and air come before plants.','If you must switch something off, try the Greenhouse first and eat a crate.']},
+ jupiter:{0:['Robots only on Jupiter. Your job: keep the robot healthy and send data home.','Ocean Explorer scores data. Careful Explorer also scores the Health left at the end.','You will pick a moon, an orbit and how many years the mission runs.'],
+   1:['Which moon has the most radiation? Which has the least? Then think about your orbit.','More danger means more points per data packet.','NASA\'s Europa Clipper loops around Jupiter to dodge radiation. Callisto is safest of all.'],
+   2:['Sunlight is about 25 times weaker at Jupiter. What power works far from the Sun?','Radiation hurts the robot every year. What protects its brain?','Data only counts if your antenna sends it home. Match the antenna to your instruments.'],
+   3:['The fuel tank works only once. Use it now or save it for a surprise?','The swing-by costs 1 Health but saves the tank for a water-spray dive (+10 points).','A Radiation Vault turns a big blast into a small one.'],
+   4:['Data waits in memory when the antenna is full.','The close flyby costs 2 Health FIRST. Do you have enough?','If Health is low, play it safe in Year 4.']},
+ mystery:{0:['This planet is too far to visit, so telescopes collect clues.','Clue Hunter scores clues. Future Planner scores saving coins or sending a probe.','You will sort each clue: a hint of life, not proof, or bad news.'],
+   1:['Closest isn\'t always best. What does each star do to its planet?','Planet X gives a free clue.','Any planet works. The clues are what count.'],
+   2:['Each clue card is worth points (up to 4 cards).','The Space Telescope gives 2 Air Clues. The Ground Telescope gives a Planet Clue.','Leftover coins are worth points too, so don\'t overspend.'],
+   3:['If you bought Double Check, tap a clue to swap it.','Which clues could come from volcanoes or starlight instead of life?','Oxygen + Methane together is the strongest hint of life.'],
+   4:['Sort each clue: does it point to life, could it fool you, or is it bad news for life?','Oxygen alone or methane alone can come from things that aren\'t alive: not proof. Too Hot and Star Flares are bad news.','Verdict: Too Hot means "No life here". Oxygen + Methane together (not Too Hot) means "Strong hint". Otherwise, "Maybe".']}};
+
+const loadBest = () => store.get('se2026-best', {});
+function saveBest(k, v){ const b = loadBest(); if (!b[k] || v > b[k]) { b[k] = v; store.set('se2026-best', b); } }
+function addRecord(S, total){ const B = store.get('se2026-board', []); const d = new Date();
+  B.push({k:S.k, score:total, team:S.team.players.map(p=>p.name).join(', '), obj:P[S.k].objs[S.obj][0], date:`${d.getMonth()+1}/${d.getDate()}`});
+  B.sort((a,b) => b.score - a.score); store.set('se2026-board', B.slice(0,40)); }
+const starsFor = s => s >= 90 ? 3 : s >= 75 ? 2 : s >= 60 ? 1 : 0;
+
+let CUR = null;
+class Over extends Error { constructor(why, code){ super(why); this.why = why; this.code = code; } }
+const qty = (S,id) => S.q[id] || 0;
+const has = (S,id) => qty(S,id) > 0;
+const partOf = (k,id) => P[k].parts.find(p => p.id === id);
+function totals(S){ const Pk = P[S.k]; let cost = S.rocket ? S.rocket.cost : 0, mass = 0, made = 0, used = 0;
+  Pk.parts.forEach(p => { const n = qty(S,p.id); if (!n) return; cost += p.cost*n; mass += (p.mass||0)*n; const pw = p.power||0; if (pw > 0) made += pw*n; else used += -pw*n; });
+  if (S.orbit){ cost += S.orbit.cost; mass += S.orbit.mass; }
+  return {cost, mass, made, used}; }
+function moonNight(S){ const s = qty(S,'solar'); return (S.site && S.site.id==='pole' ? s*(3-(S.dust||0)) : 0) + (s ? qty(S,'battery')*3 : 0) + qty(S,'nuclear')*5; }
+const who = (S, role) => { if (!S.team || S.team.n < 2) return ''; const p = S.team.players.find(p => p.roles.includes(role)); return p ? `${p.name} (${ROLES[role][0]})` : ''; };
+const callout = (S, role, text) => { const w = who(S, role); return w ? `${w}: ${text}` : text; };
+function choiceAdd(S, text, cat, role){ S.choices.push([text, cat, role]); renderSide(); }
+function newState(k, o = {}){ const Pk = P[k]; const sb = !!o.sandbox;
+  return {k, sandbox:sb, budget: sb ? 999 : Pk.budget, coins: sb ? 999 : Pk.budget, q: o.q ? {...o.q} : {}, rocket: o.rocket || null, site: o.site || null, orbit: o.orbit || null, obj: o.obj || 'a',
+    team: o.team || {n:1, players:[{name:'Explorer', roles:ROLESPLIT[1][0]}]}, tank: Pk.tank||0, fuel:0, made:0, fed:0, river:0, cliff:0, onTime:true, health: Pk.health||11,
+    mem:0, sent:0, dataMade:0, spray:0, flyby:0, clues:[], over:null, done:false, sims:0, round:0, clue:{}, choices:[], events:[], inShop:false, launched:false}; }
+function renderSide(){
+  const T = $('#tally'), C = $('#choices');
+  if (!CUR){ T.replaceChildren(h('p',{class:'empty'}, 'Pick a planet to start. Your coins, mass, power and points will show here.')); C.replaceChildren(h('li',{class:'empty',style:'background:none;border:0'}, 'Nothing chosen yet.')); return; }
+  const S = CUR, Pk = P[S.k]; const rows = [['Planet', `${Pk.name}${S.sandbox ? ' (practice)' : ''}`]];
+  if (S.site) rows.push([S.k==='jupiter' ? 'Moon' : S.k==='mystery' ? 'Target' : 'Site', S.site.name]);
+  if (S.orbit) rows.push(['Orbit', S.orbit.name]);
+  if (S.inShop){ const t = totals(S); rows.push(['Coins left', S.sandbox ? '∞' : S.budget - t.cost, t.cost > S.budget ? 'warn' : '']);
+    if (S.k !== 'mystery'){ rows.push(['Payload mass', `${t.mass} / ${S.rocket ? S.rocket.carry : '?'}`, (!S.rocket || t.mass > S.rocket.carry) ? 'warn' : 'good'], ['Power', `+${t.made} / −${t.used}`, t.used > t.made ? 'warn' : 'good']);
+      if (S.k === 'moon') rows.push(['Night power', `+${moonNight(S)}`, moonNight(S) < (1 + (has(S,'drill')&&has(S,'melter')?4:0)) ? 'warn' : 'good']); }
+    rows.push(['Test runs', S.sandbox ? 'free' : `${S.sims} of 3 used`]); }
+  else { rows.push(['Coins left', S.sandbox ? '∞' : S.coins]);
+    if (S.k==='moon') rows.push(['Water tank', S.tank], ['Rocket fuel', S.fuel]);
+    if (S.k==='mars') rows.push(['Water tank', S.tank], ['Food crates', qty(S,'crate')], ['Seasons fed', S.fed]);
+    if (S.k==='jupiter') rows.push(['Robot Health', `${S.health} / 11`, S.health <= 3 ? 'warn' : 'good'], ['Data made', S.dataMade], ['Data sent home', S.sent], ['Data waiting', S.mem]);
+    if (S.k==='mystery') rows.push(['Telescope data', `${S.clues.length} clue cards`]); }
+  const kids = [h('dl',{class:'tally'}, rows.flatMap(([a,b,c]) => [h('dt',{}, a), h('dd',{class:c||''}, b)]))];
+  if (!S.sandbox){ const sc = SCORE[S.k](S); const safeCat = S.k==='mystery' ? null : sc[0][0]; let got = 0;
+    const lis = sc.map(([cat,,pts,max]) => { const isPend = !S.launched || (cat === safeCat && !S.done); if (!isPend) got += pts; return h('li',{class:isPend?'pend':''}, h('span',{}, cat), h('span',{}, isPend ? (S.launched ? `+${max} if safe` : `up to ${max}`) : `${pts} / ${max}`)); });
+    kids.push(h('div',{class:'ptsbox'}, h('div',{}, `Points so far · ${P[S.k].objs[S.obj][0]}`), h('div',{class:'big'}, got, h('small',{}, ' / 100')), h('ul',{}, lis))); }
+  T.replaceChildren(...kids);
+  const items = [];
+  if (S.team.n > 1) items.push([`Team: ${S.team.players.map(p => p.name).join(', ')}`, 'science']);
+  items.push([`Planet: ${Pk.name} · ${P[S.k].objs[S.obj][0]}`, 'science']);
+  if (S.site) items.push([`${S.k==='jupiter'?'Moon':S.k==='mystery'?'Target':'Landing site'}: ${S.site.name}`, 'science', 'planner']);
+  if (S.orbit) items.push([`Orbit: ${S.orbit.name}`, 'rocket', 'planner']);
+  if (S.inShop || S.launched){ if (S.rocket) items.push([`Rocket: ${S.rocket.name}`, 'rocket', 'engineer']);
+    Pk.parts.filter(p => has(S,p.id)).forEach(p => items.push([`${p.name}${qty(S,p.id)>1 ? ' ×' + qty(S,p.id) : ''}`, p.cat, CATROLE[p.cat]])); }
+  C.replaceChildren(...[...items, ...S.choices].map(([t,cat,role]) => h('li',{style:`--cc:${CAT[cat]?CAT[cat][1]:'#7b4ae2'}`}, role && S.team.n > 1 ? h('small',{}, who(S, role)) : null, t)));
+}
+
+function hideClue(){ $('#cluebox').hidden = true; }
+$('#clueclose').onclick = hideClue;
+$('#cluebtn').onclick = () => { if (!CUR || CUR.round == null || CUR.done) return; const list = CLUES[CUR.k][CUR.round]; const i = CUR.clue[CUR.round] = Math.min((CUR.clue[CUR.round]||0) + 1, list.length);
+  $('#cluehead').textContent = `Clue ${i} of ${list.length} · tap Clues for the next one`; $('#cluetext').textContent = list[i-1]; $('#cluebox').hidden = false; log(`Clue ${i} (Round ${CUR.round})`); };
+$('#quitbtn').onclick = () => overlay(h('h3',{}, 'Quit this mission?'), h('p',{}, 'You will go back to the planet menu. This mission\'s choices will be lost.'),
+  h('div',{class:'btnrow'}, h('button',{class:'sbtn pink', onclick:() => { closeOverlay(); log('Quit the mission'); start(null, CUR && CUR.sandbox); }}, 'Yes, quit'), h('button',{class:'sbtn blue', onclick:closeOverlay}, 'No, keep playing')));
+function inMission(on){ $('#cluebtn').disabled = !on; $('#quitbtn').disabled = !on; }
+
+async function academy(){
+  setJob(null, 'Read how the game works. Tap Next, or Skip if you already know.', 'Knowing the rules and the goal helps you plan a mission that works.');
+  drawBackdrop('title'); setMon([]); CUR = null; inMission(false); renderSide();
+  const pages = [
+    () => card({kind:'Mission Academy · 1 of 3', title:'You are the mission boss!', pc:'#7b4ae2', text:'Hi, I\'m Space Arli, your robot mission computer! You will plan a real-style space mission: where to go, what to pack, and how to keep it going.',
+      lines:[['good','A mission succeeds when your crew or robot stays SAFE and reaches its GOAL.'],['info','Every choice helps one thing and costs another. There is never one perfect answer.'],['info','Space Arli, your robot mission computer, will help. Tap Clues when you are stuck.']]}),
+    () => h('div',{class:'card', style:'--pc:#ff8c1a'}, h('div',{class:'k'}, 'Mission Academy · 2 of 3'), h('h3',{}, 'The 5 things you juggle (plus a tip)'),
+      h('div',{class:'jgrid'}, [['Coins','Your budget. Every rocket and part costs coins.'],['Mass','How heavy your payload is. Each rocket can only lift so much.'],['Power','Solar panels and generators make it. Machines use it. Night and dust storms cut solar.'],['Life support / Health','Water, air and food for people. Health for robots.'],['Data & messages','Instruments make data; antennas send it home. Far away, messages take minutes or hours.'],['Rocket tip','Pack parts first, then pick the SMALLEST rocket that fits. Saved coins = points.']].map(([a,b]) => h('div',{class:'jg'}, h('b',{}, a), b)))),
+    () => card({kind:'Mission Academy · 3 of 3', title:'How a mission goes', pc:'#33b864',
+      lines:[['info','1 Research: pick where to go (and on Jupiter, your orbit).'],['info','2 Prepare: pack parts, pick a rocket, and tap Simulate to test (first test free).'],['info','3 Explore: launch! Surprise events test your packing.'],['info','4 Sustain: watch your mission play out and decide when it asks.'],['good','Score 60+ out of 100 to move on. Play alone or as a team of up to 4.']]})];
+  for (let i = 0; i < pages.length; i++){
+    clear(true); say(''); content.append(h('div',{class:'academy'}, pages[i]()));
+    const v = await choose([{label:'Skip intro', value:'skip', color:'grey', sm:true}, {label: i < 2 ? 'Next ›' : 'Pick a planet ›', value:'next', color:'green'}]);
+    if (v === 'skip') break; }
+  store.set('se2026-intro', 1); }
+function runAcademy(){ RUN++; const t = RUN; closeOverlay(); academy().then(() => { if (t === RUN) start(); }).catch(e => { if (!(e instanceof Cancel)) console.error(e); }); }
+$('#howbtn').onclick = () => { if (CUR && !CUR.done) { overlay(h('h3',{}, 'How to play'), h('p',{}, 'Choose your team, read the briefing, then go through 4 rounds: Research, Prepare, Explore, Sustain. Pack parts first, pick the smallest rocket that fits, and Simulate before you launch. Score 60+ to move on.'), h('div',{class:'btnrow'}, h('button',{class:'sbtn blue', onclick:closeOverlay}, 'Got it'))); return; } runAcademy(); };
+
+async function teamSetup(S){
+  setJob(0, 'Choose how many explorers are playing (1–4) and type first names.', 'Real missions are run by teams. Each person gets a job, and you decide together.', 'Team');
+  return new Promise(res => {
+    let n = S.team.n; const names = S.team.players.map(p => p.name === 'Explorer' ? '' : p.name);
+    const draw = () => { clear(true); say(''); setMon([['team', `${n} player${n>1?'s':''}`]]);
+      const rows = ROLESPLIT[n].map((roles, i) => h('div',{class:'prow'}, h('input',{id:`pname${i}`, value: names[i] || `Explorer ${i+1}`, 'aria-label':`Player ${i+1} name`, maxlength:14, oninput:e => { names[i] = e.target.value; }}),
+        h('div',{class:'roles'}, roles.map(r => h('span',{class:'role', style:`--rc:${ROLES[r][1]}`}, ROLES[r][0])))));
+      content.append(h('div',{class:'card', style:'--pc:#7b4ae2'}, h('div',{class:'k'}, 'Mission team'), h('h3',{}, 'How many explorers?'),
+        h('div',{class:'team'}, [1,2,3,4].map(i => h('button',{class:'nbtn'+(i===n?' on':''), onclick:() => { n = i; draw(); }}, i))),
+        h('div',{class:'players'}, rows),
+        h('div',{class:'why'}, h('b',{}, 'Roles: '), 'Planner picks where to go. Engineer picks rocket and power. Science Officer picks instruments. Life Support & Comms keeps the crew alive and data flowing. Tip: in videos you share, keep names like "Explorer 1".')));
+      choose([{label:'‹ Planets', value:'back', color:'grey', sm:true}, {label:'Brief me ›', value:'ok', color:'green'}]).then(v => {
+        if (v === 'back') return res('back');
+        const pl = ROLESPLIT[n].map((roles, i) => ({name: (($(`#pname${i}`)||{}).value || '').trim().slice(0,14) || `Explorer ${i+1}`, roles}));
+        S.team = {n, players: pl}; log(`Team: ${pl.map(p => p.name).join(', ')}`); renderSide(); res('ok'); }); };
+    draw(); }); }
+async function briefing(S){
+  const Pk = P[S.k]; setJob(0, 'Read the goal and the challenges, then choose your mission objective.', 'Engineers always start with the goal. It decides everything else you pack.', 'Briefing');
+  clear(true); say(''); setMon([['coins', S.sandbox ? '∞' : Pk.budget]]);
+  content.append(h('div',{class:'card', style:`--pc:${PC[S.k]};border-color:${PC[S.k]}`}, h('div',{class:'k'}, `${'★'.repeat(Pk.stars)}${'☆'.repeat(4-Pk.stars)} · ${Pk.crew}${S.sandbox ? ' · SANDBOX: unlimited coins, no score' : ''}`), h('h3',{}, `${Pk.name}: ${Pk.mission}`), h('p',{}, Pk.goal),
+    h('div',{class:'two'}, h('div',{}, h('b',{style:'font-family:var(--display)'}, 'Challenges you\'ll face'), h('ul',{}, Pk.challenges.map(c => h('li',{class:'bad'}, c)))),
+      h('div',{}, h('b',{style:'font-family:var(--display)'}, 'Things to think about'), h('ul',{}, Pk.thinks.map(c => h('li',{class:'info'}, c))))),
+    h('div',{class:'objs'}, Object.entries(Pk.objs).map(([k,[n,d]]) => h('div',{class:'obj'}, h('b',{}, `Objective: ${n}`), h('span',{}, d))))));
+  const v = await choose([{label:'‹ Team', value:'back', color:'grey', sm:true}, ...Object.entries(Pk.objs).map(([k,[n]]) => ({label:`Choose ${n}`, value:k, color: k==='a' ? 'blue' : 'purple'}))]);
+  if (v === 'back') return 'back'; S.obj = v; log(`Objective: ${Pk.objs[v][0]}`); renderSide(); return 'ok'; }
+async function roundIntro(S, n, title, text){
+  S.round = n; clear(); setMon(monList(S));
+  setJob(n, `Round ${n}: ${title}. ${text}`, ['','Where you go decides what you face.','Your plan decides if the mission can work.','Surprises test your plan.','Your plan proves itself turn by turn.'][n], `Round ${n} of 4`);
+  content.append(h('div', {style:'margin:auto 0;text-align:center'},
+    h('div', {class:'card', style:`--pc:${PC[S.k]};display:inline-block;min-width:380px;max-width:560px;border-color:${PC[S.k]}`}, h('div',{class:'k'}, `Round ${n} of 4`), h('h3',{style:'font-size:34px'}, title), h('p',{}, text))));
+  say(text + ' Need help? Tap Clues.'); log(`${P[S.k].name}: Round ${n} · ${title}`); renderSide(); await sleep(200); await next('Go ›');
+}
+function monList(S){
+  const L = [['round', S.round ? ['','Research','Prepare','Explore','Sustain'][S.round] : 'Start']];
+  if (S.k==='moon' && S.round>=3) L.push(['water', S.tank], ['fuel', S.fuel]);
+  if (S.k==='mars' && S.round>=3) L.push(['water', S.tank], ['crates', qty(S,'crate')]);
+  if (S.k==='jupiter' && S.round>=3) L.push(['health', S.health, S.health <= 3 ? 'warn' : ''], ['data sent', S.sent]);
+  return L; }
+function pickCards(S, list, kind, backLabel){
+  return new Promise(res => { clear(); setMon(monList(S)); const g = h('div', {class:'sites'});
+    list.forEach(s => g.append(Object.assign(card({kind, title:s.name, lines:s.lines, think:s.think, pc:PC[S.k]}), {tabIndex:0, onclick:() => res(s), onkeydown:e => { if (e.key==='Enter'||e.key===' ') { e.preventDefault(); res(s); } }})));
+    content.append(h('button',{class:'back', onclick:() => res('back')}, backLabel), g); }); }
+async function pickSite(S){
+  setJob(1, S.k==='jupiter' ? 'Pick which moon of Jupiter to explore. Read the + and − on each card.' : S.k==='mystery' ? 'Pick which planet to study.' : 'Pick where to land. Read the + and − on each card.',
+    'Where you go decides how much water, sunlight, danger and science you get.', 'Pick a place');
+  say(callout(S, 'planner', 'Pick where to go. Read the good (+) and bad (−) on each card, then tap one.'));
+  return pickCards(S, P[S.k].sites, S.k==='jupiter' ? 'Moon' : S.k==='mystery' ? 'Planet' : 'Landing site', '‹ Briefing'); }
+async function pickOrbit(S){
+  setJob(1, 'Choose how your robot will travel near the moon.', 'Your orbit changes how much radiation hits the robot and how much data it collects.', 'Pick an orbit');
+  say(callout(S, 'planner', `How will your robot get close to ${S.site.name}?`));
+  return pickCards(S, P.jupiter.orbits, 'Orbit', '‹ Change moon'); }
+async function loseMachines(S, n){
+  for (let i=0;i<n;i++){
+    const rank = id => { const i = (LOSE_ORDER[S.k]||[]).indexOf(id); return i < 0 ? 99 : i; };
+    const opts = P[S.k].parts.filter(p => !p.must && !p.land && p.id !== 'relay' && has(S,p.id)).sort((x,y) => rank(x.id) - rank(y.id));
+    if (!opts.length) { say('You have no machines left to lose.'); return; }
+    clear(); content.append(card({kind:'Crash damage', title:`Lose ${n-i} machine${n-i>1?'s':''}`, text:'Pick which machine broke. The Habitat, the landing system and anything in orbit are safe.', why:'Losing the right machine can save the mission. Which one can you live without?', pc:PC[S.k]}));
+    say(callout(S, 'engineer', 'Choose wisely: which machine can you live without?'));
+    const id = await choose(opts.map(p => ({label: p.name + (qty(S,p.id)>1 ? ` (${qty(S,p.id)})` : ''), value:p.id, color:'pink'})));
+    S.q[id]--; log(`Lost: ${partOf(S.k,id).name}`); choiceAdd(S, `Crash: lost ${partOf(S.k,id).name}`, 'safety', 'engineer');
+  } }
+async function eventCard(S, {title, text, yes, no, why}, isYes){
+  clear(); setMon(monList(S));
+  setJob(3, 'Read the surprise. Did you pack the right thing? The highlighted box shows what happens.', 'Surprises test your plan. Good engineers plan for them before launch.', `Event ${S.evN} of ${S.evT}`);
+  const c = card({kind:'Surprise event', title, text, pc:PC[S.k]});
+  if (yes != null) c.append(h('div', {class:'ifb y'+(isYes?' hit':'')}, h('b',{}, 'IF YES'), h('span',{}, yes)));
+  if (no != null) c.append(h('div', {class:'ifb n'+(!isYes?' hit':'')}, h('b',{}, 'IF NOT'), h('span',{}, no)));
+  if (why) c.append(h('div',{class:'why'}, h('b',{}, 'What just happened: '), why));
+  content.append(c); log(`Event: ${title} → ${isYes ? 'yes' : 'no'}`); S.events.push(`${title}: ${isYes ? (yes||'') : (no||'')}`); renderSide(); return c; }
+
+function readyList(S){ const t = totals(S); const isM = S.k==='mystery'; const L = [];
+  if (!isM) L.push([!!S.rocket, S.rocket ? `Rocket: ${S.rocket.name}` : 'Pick a rocket (Rocket tab, last)']);
+  P[S.k].parts.filter(p => p.must).forEach(p => L.push([has(S,p.id), `${p.name} (MUST)`]));
+  if (S.k==='moon' && S.site.id==='far') L.push([has(S,'relay'), 'Relay Satellite (Far Side)']);
+  if (S.k==='mars') L.push([has(S,'parachute') || (has(S,'airbags') && t.mass <= 8), has(S,'parachute')||has(S,'airbags') ? 'Landing system safe for your mass' : 'Landing system']);
+  if (isM) L.push([P.mystery.parts.some(p => has(S,p.id)), 'At least one tool']);
+  L.push([t.cost <= S.budget, S.sandbox ? 'Coins: unlimited' : `Coins: ${t.cost} of ${S.budget}`]);
+  if (!isM) L.push([!!S.rocket && t.mass <= S.rocket.carry, `Mass: ${t.mass} of ${S.rocket ? S.rocket.carry : '?'}`], [t.made >= t.used, `Power: make ${t.made}, use ${t.used}`]);
+  if (S.k==='moon' && has(S,'battery')) L.push([has(S,'solar'), 'Batteries have a solar panel to charge them']);
+  return L; }
+function predictions(S){ const t = totals(S); const L = [];
+  if (S.k === 'moon'){ const both = has(S,'drill') && has(S,'melter'); const need = 1 + (both ? 4 : 0); const night = moonNight(S);
+    L.push([night >= need ? 'ok' : 'bad', `Night power: make ${night}, need ${need}`], [both && S.site.water >= 3 ? 'ok' : 'bad', `Water per turn: make ${both ? S.site.water : 0}, crew needs 3`]);
+    L.push([has(S,'cleaner') && has(S,'shelter') ? 'ok' : 'nb', 'Dust Cleaner + Storm Shelter guard against events']); }
+  if (S.k === 'mars'){ const w = (has(S,'drill')&&has(S,'melter') ? S.site.water : 0) + (has(S,'oven') ? 3 : 0);
+    const need = (has(S,'recycler') ? 2 : 4) + (has(S,'oxygen') ? 0 : 2) + (has(S,'greenhouse') ? 1 : 0);
+    const food = Math.min(4, (has(S,'greenhouse') ? 3 : 0) + qty(S,'crate')); const spring = qty(S,'crate') >= 1;
+    L.push([w >= need ? 'ok' : 'bad', `Water per season: make ${w}, need ${need} (tank 6)`], [food >= 4 && spring ? 'ok' : 'bad', `Food: covers ${spring ? food : Math.max(0, food-1)} of 4 seasons`], ['nb', 'Dust storms halve solar power']); }
+  if (S.k === 'jupiter'){ const o = S.orbit || {rad:0, data:0}; let disc = (has(S,'camera')?1:0) + (has(S,'radar')?1:0); if (disc) disc = Math.max(0, disc + o.data); const cap = (has(S,'big')?3:0) + (has(S,'small')?1:0);
+    const lossY = Math.max(0, Math.max(0, S.site.rad + o.rad) - (has(S,'vault')?1:0)); const hp = 11 - (has(S,'tank') ? 0 : 1) - lossY*4 - 1;
+    L.push([disc > 0 ? 'ok' : 'bad', `Data per year: ${disc} packets`], [cap >= disc && cap > 0 ? 'ok' : 'bad', `Antenna sends per year: ${cap}`], [hp > 2 ? 'ok' : 'bad', `Health after 4 years (before surprises): ${hp}`]); }
+  if (S.k === 'mystery'){ const air = (has(S,'scope')?2:0) + (has(S,'extra')?1:0) + (S.site.id==='x'?1:0), pl = (has(S,'ground')?1:0);
+    L.push([air + pl >= 3 ? 'ok' : 'bad', `Clue cards: about ${air + pl + (has(S,'watcher')?1:0)}`], ['nb', `Air ${air} · Planet ${pl}${has(S,'watcher')?' (+ Star Watcher)':''}`], [S.budget - t.cost >= 5 ? 'ok' : 'nb', `Coins left: ${S.budget - t.cost}`]); }
+  return L; }
+function checkPanel(S){ const R = readyList(S);
+  return h('div',{class:'check'}, h('div',{class:'col'}, h('div',{class:'t'}, 'Ready to launch?'), R.map(([ok,t]) => h('div',{class:'l '+(ok?'ok':'bad')}, t))),
+    h('div',{class:'col'}, h('div',{class:'t'}, 'Mission Check'), predictions(S).map(([c,t]) => h('div',{class:'l '+c}, t)))); }
+
+const LOSE_ORDER = {moon:['shelter','cleaner','battery','solar','nuclear','melter','drill'], mars:['lradar','remrover','selfrover','crate','oven','recycler','greenhouse','oxygen','solar','nuclear','melter','drill']};
+function bestMarsSeason(T, site, s, made, broken){
+  const hasT = id => (T.q[id]||0) > 0; const mach = []; [['drill',2],['melter',2],['oven',3],['oxygen',2]].forEach(([id,w]) => hasT(id) && mach.push([id,w]));
+  if (hasT('recycler') && !broken) mach.push(['recycler',2]); if (hasT('greenhouse')) mach.push(['greenhouse', s===4?2:1]);
+  let best = null;
+  for (let m = 0; m < (1 << mach.length); m++){ const on = new Set(mach.filter((_,i) => m & (1<<i)).map(x => x[0]));
+    if (1 + mach.filter(x => on.has(x[0])).reduce((a,x) => a+x[1], 0) > made) continue;
+    let w = 0; if (on.has('drill') && on.has('melter')) w += Math.max(0, site.water - (s===4?1:0)); if (on.has('oven')) w += 3;
+    const need = (on.has('recycler')?2:4) + (on.has('oxygen')?0:2) + (on.has('greenhouse')?1:0); const tank = T.tank + w - need;
+    const food = (s>=2 && on.has('greenhouse')) ? 2 : (T.q.crate||0) > 0 ? 1 : 0; const val = (tank>=0?1e6:0) + (food?1e4:0) + (food===2?5e3:0) + tank;
+    if (!best || val > best.val) best = {val, tank, food, w, need, off: mach.filter(x => !on.has(x[0])).map(x => partOf('mars',x[0]).name)}; }
+  return best; }
+function runYears({site, orbit, q, health, off, close}){
+  const hasQ = id => (q[id]||0) > 0; const instr = ['camera','radar','big','small'].filter(i => hasQ(i));
+  let hp = health, mem = 0, sent = 0, flyby = 0, dead = hp <= 0; const lines = [];
+  if (dead) lines.push(['bad','The robot\'s Health reached 0 on the way.']);
+  for (let y = 1; y <= 4 && !dead; y++){ const on = new Set(instr.filter(i => !(y===1 && i===off))); let dbl = false;
+    if (y===4 && close){ hp -= 2; if (hp <= 0){ dead = true; lines.push(['bad','Year 4: the close flyby drains the last Health.']); break; } dbl = true; flyby = 10; }
+    let disc = (on.has('camera')?1:0) + (on.has('radar')?1:0); if (disc) disc = Math.max(0, disc + orbit.data); if (dbl) disc *= 2; mem += disc;
+    let cap = (on.has('big')?3:0) + (on.has('small')?1:0); if (y===3) cap = Math.max(0, cap-1); const sd = Math.min(mem, cap); mem -= sd; sent += sd;
+    const dmg = Math.max(0, Math.max(0, site.rad + orbit.rad) - (hasQ('vault')?1:0)) + (y===2?1:0); hp -= dmg;
+    lines.push([hp > 0 ? 'ok' : 'bad', `Year ${y}${y===4 && close ? ' (close flyby)' : ''}: ${disc} data made, ${sd} sent home, −${dmg} Health → ${Math.max(hp,0)}.`]);
+    if (hp <= 0) dead = true; }
+  return {hp, sent, flyby, dead, lines}; }
+function simulate(S){
+  const T = {k:S.k, site:S.site, orbit:S.orbit, obj:S.obj, q:{...S.q}, coins: S.sandbox ? 999 : S.budget - totals(S).cost, tank:P[S.k].tank||0, fuel:0, made:0, fed:0, river:0, cliff:0, onTime:S.onTime, ghGrew:false,
+    health:11, mem:0, sent:0, spray:0, flyby:0, over:null, done:true, launched:true, dust:0, flare:false, mass:totals(S).mass, clues:[]};
+  const L = []; const hasT = id => (T.q[id]||0) > 0;
+  const loseOne = () => { const id = LOSE_ORDER[S.k].find(x => hasT(x)); if (id){ T.q[id]--; return partOf(S.k,id).name; } return null; };
+  if (S.k === 'moon'){
+    const ev = S.site.id === 'equator' ? ['dust','flare'] : ['boulder','dust','flare'];
+    for (const e of ev){
+      if (e==='boulder'){ if (T.coins >= 1){ T.coins--; L.push(['ok','Boulder Field: you pay 1 coin for a photo and land safely.']); } else { const n = loseOne(); L.push(['bad',`Boulder Field: no coin left for a photo, so you crash and lose ${n||'nothing'}.`]); } }
+      if (e==='dust'){ if (hasT('cleaner')) L.push(['ok','Sticky Moon Dust: your Dust Cleaner handles it.']); else { T.dust = 1; L.push(['bad','Sticky Moon Dust: no cleaner, so each solar panel makes 1 less power.']); } }
+      if (e==='flare'){ if (hasT('shelter')) L.push(['ok','Solar Flare: the Storm Shelter keeps everyone safe.']); else { T.flare = true; L.push(['bad','Solar Flare: no shelter, so 1 less water on Lunar Day.']); } }
+    }
+    const s = T.q.solar||0, each = 3 - T.dust;
+    for (const day of [true,false]){
+      const made = day ? s*each + (T.q.nuclear||0)*5 : (S.site.id==='pole' ? s*each : 0) + (s ? (T.q.battery||0)*3 : 0) + (T.q.nuclear||0)*5;
+      const nm = day ? 'Lunar Day' : 'Lunar Night';
+      if (made < 1){ T.over = 'The Habitat had no power at night.'; L.push(['bad',`${nm}: power ${made}. The Habitat goes dark and the crew must go home.`]); break; }
+      const works = hasT('drill') && hasT('melter') && made >= 5; const w = works ? S.site.water - (day && T.flare ? 1 : 0) : 0; T.made += w;
+      if (w >= 3){ const x = w - 3; const nightOk = (S.site.id==='pole' ? s*each : 0) + (s ? (T.q.battery||0)*3 : 0) + (T.q.nuclear||0)*5 >= 5;
+        if (x) { if (day && !nightOk && T.tank < 3) T.tank += x; else T.fuel += x; }
+        L.push(['ok',`${nm}: power ${made}, made ${w} water, crew used 3${x ? `, ${x} extra` : ''}.`]); }
+      else { const sh = 3 - w; if (T.tank >= sh){ T.tank -= sh; L.push(['bad',`${nm}: ${works ? `only ${w} water made` : `power ${made} is not enough for the Drill and Melter (need 5), so no water`}. The tank covers ${sh}.`]); }
+        else { T.over = 'The crew ran out of water.'; L.push(['bad',`${nm}: not enough water and the tank is empty. The crew must go home.`]); break; } }
+    }
+  }
+  if (S.k === 'mars'){
+    const lsafe = hasT('parachute') || (hasT('airbags') && T.mass <= 8);
+    if (lsafe) L.push(['ok','Landing: safe touchdown.']); else { const a = loseOne(), b = loseOne(); L.push(['bad',`Landing: crash! You lose ${a||'nothing'} and ${b||'nothing'}.`]); }
+    if (lsafe && !hasT('lradar')){ const a = loseOne(); L.push(['bad',`No Landing Radar: in the worst case you hit a rock (roll a 1) and lose ${a||'nothing'}.`]); } else if (lsafe) L.push(['ok','Landing Radar: steered around the rocks.']);
+    if (hasT('remrover') && !hasT('selfrover')){ T.q.remrover--; L.push(['bad','Rover Near a Cliff: your Remote Rover can\'t get the STOP message in time and is lost.']); }
+    else if (hasT('selfrover')){ T.cliff = 5; L.push(['ok','Rover Near a Cliff: the Self-Driving Rover stops itself (+5).']); }
+    const springHalf = !hasT('nuclear'); L.push([springHalf ? 'bad' : 'ok', springHalf ? 'Dusty Panels: solar makes half power in Spring.' : 'Dusty Panels: nuclear power keeps going.']);
+    for (let s = 1; s <= 4; s++){
+      const nm = ['','Spring','Summer','Autumn','Winter'][s]; const half = (s===1 && springHalf) || s===2; const broken = s===3 && hasT('recycler');
+      const each = 3 + (S.site.id==='equator'?1:0) - (s===4 && S.site.id==='pole'?1:0); let sp = (T.q.solar||0)*each; if (half) sp = Math.floor(sp/2);
+      const made = sp + (T.q.nuclear||0)*5;
+      if (made < 1){ T.over = 'The Habitat lost power.'; L.push(['bad',`${nm}: power ${made}. The Habitat goes dark.`]); break; }
+      const best = bestMarsSeason(T, S.site, s, made, broken);
+      const extra = (half ? ' Dust storm: solar halved.' : '') + (broken ? ' The Recycler breaks.' : '') + (best.off.length ? ` Switch off: ${best.off.join(', ')}.` : '');
+      if (best.tank < 0){ T.over = 'The crew ran out of water or air.'; L.push(['bad',`${nm}: made ${best.w} water but needed ${best.need}, and the tank ran dry.${extra}`]); break; }
+      T.tank = best.tank; if (best.food===2){ T.ghGrew = true; T.fed++; } else if (best.food===1){ T.q.crate--; T.fed++; }
+      L.push([best.food ? 'ok' : 'bad', `${nm}: water ${best.w} made / ${best.need} used, tank ${T.tank}. Food: ${best.food===2?'greenhouse':best.food===1?'a crate':'none (hungry season)'}.${extra}`]);
+    }
+  }
+  if (S.k === 'jupiter'){
+    let bestRun = null; const o = S.orbit || {rad:0, data:0};
+    for (const fast of (hasT('tank') ? [true,false] : [false])) {
+      const R = {lines:[], health:11, spray:0, eclipse:false};
+      if (fast){ R.lines.push(['ok','Route: you use the fuel tank to fly straight there.']); } else { R.health -= 1; R.lines.push(['info','Route: swing past Venus and Earth (−1 Health).']); }
+      if (hasT('vault')){ R.health -= 1; R.lines.push(['ok','Radiation Blast: the vault protects the robot (−1 Health).']); } else { R.health -= 3; R.lines.push(['bad','Radiation Blast: no vault (−3 Health).']); }
+      if (!hasT('nuclear')){ R.eclipse = true; R.lines.push(['bad','Eclipse: solar wings go dark, so 1 instrument is off in Year 1.']); } else R.lines.push(['ok','Eclipse: nuclear power keeps everything on.']);
+      const instr = ['camera','radar','big','small'].filter(i => hasT(i));
+      for (const off of (R.eclipse && instr.length ? instr : [null])) for (const close of [false,true]){
+        const r = runYears({site:S.site, orbit:o, q:T.q, health:R.health, off, close});
+        const st = {k:'jupiter', site:S.site, obj:S.obj, sent:r.sent, spray:R.spray, flyby:r.flyby, health:Math.max(0,r.hp), over: r.dead ? 'radiation' : null, done:true, launched:true};
+        const pts = SCORE.jupiter(st).reduce((a,x) => a + x[2], 0);
+        if (!bestRun || pts > bestRun.pts) bestRun = {pts, lines:[...R.lines, ...r.lines, ...(off ? [['info',`Best choice in Year 1: switch off the ${partOf('jupiter',off).name}.`]] : [])], st}; }
+    }
+    L.push(...bestRun.lines); Object.assign(T, bestRun.st);
+  }
+  const rows = SCORE[S.k](T); const pts = rows.reduce((a,r) => a + r[2], 0); const pass = pts >= 60 && !T.over;
+  return {lines:L, pts, pass}; }
+function showSim(S){
+  const r = simulate(S);
+  overlay(h('h3',{}, `Test run #${S.sims}: worst case`), h('p',{}, 'Everything that can go wrong goes wrong, and Space Arli makes the smartest choices for you. In the real game luck can only help, but you make the choices yourself.'),
+    h('ul',{class:'simlist'}, r.lines.map(([c,t]) => h('li',{class:c}, t))),
+    h('div',{class:'verdict '+(r.pass?'win':'lose')}, S.sandbox ? `Practice result: ${r.pass ? 'the mission works even in the worst case.' : 'this plan could fail. Look at the ✗ lines.'}` : r.pass ? `Predicted score ${r.pts}/100. Your plan passes even in the worst case!` : `Predicted score ${r.pts}/100. This plan could fail. Look at the ✗ lines and change your plan.`),
+    h('div',{class:'btnrow'}, h('button',{class:'sbtn blue', onclick:closeOverlay}, 'Back to my plan')));
+  log(`Test run #${S.sims}: worst case ${r.pts}/100 (${r.pass?'pass':'fail'})`); choiceAdd(S, `Test run #${S.sims}: ${S.sandbox ? '' : r.pts + '/100 '}${r.pass?'✓':'✗'}`, 'science', 'engineer'); }
+
+function guideStep(S){ const t = totals(S);
+  if (!has(S,'habitat')) return {tab:'life', text:'Step 1: open the green Life support tab and add the Habitat. It\'s a MUST.'};
+  if (!(has(S,'drill') && has(S,'melter'))) return {tab:'water', text:'Step 2: open the blue Water tab. Add the Ice Drill AND the Ice Melter.'};
+  if (t.made < 5 || moonNight(S) < 5) return {tab:'power', text:`Step 3: open the yellow Power tab. Add power until Day power (${t.made}) and Night power (${moonNight(S)}) both reach 5.`};
+  if (S.site.id==='far' && !has(S,'relay')) return {tab:'comms', text:'Step 4: the Far Side needs a Relay Satellite (teal Comms tab).'};
+  if (!S.rocket || t.mass > S.rocket.carry) return {tab:'rocket', text:'Step 4: open the Rocket tab LAST. Pick the smallest rocket that fits your payload (look for the purple badge).'};
+  if (t.cost > S.budget) return {tab:null, text:'Too many coins spent. Remove something you don\'t need, or pick a smaller rocket.'};
+  if (S.sims === 0) return {tab:'sim', text:'Step 5: tap Simulate to test your plan for free.'};
+  return {tab:'launch', text:'Step 6: every line says ✓. Tap Launch!'}; }
+async function shop(S){
+  const Pk = P[S.k]; const isM = S.k === 'mystery'; S.inShop = true; S.round = 2;
+  const guided = S.k === 'moon' && !S.sandbox && !store.get('se2026-guided', 0);
+  const cats = []; if (!isM) { Pk.parts.forEach(p => { if (p.cat !== 'rocket' && !cats.includes(p.cat)) cats.push(p.cat); }); cats.push('rocket'); } else cats.push('science');
+  let tab = cats[0];
+  setJob(2, isM ? 'Buy telescope time and tools. Each one says how many clue cards you get.' : 'Pack parts first, then pick the smallest rocket that fits. Make every line in "Ready to launch?" show ✓.',
+    isM ? 'Telescope time is expensive. More clues help you decide, but leftover coins also score.' : 'A real mission fails if it is too heavy for its rocket or runs out of power.', 'Shop');
+  return new Promise(res => {
+    clear(true); say(''); const wrap = h('div', {class:'shop'}); const info = h('div', {class:'helpline', 'aria-live':'polite'});
+    const tell = (t, err) => { info.textContent = t; info.classList.toggle('err', !!err); };
+    const rocketLesson = () => { if (store.get('se2026-rocketlesson', 0)) return; store.set('se2026-rocketlesson', 1);
+      overlay(h('h3',{}, 'Why rocket size matters'), h('p',{}, 'Bigger rockets can carry more mass, but they cost a lot more. Real engineers first add up everything the spacecraft needs (the payload), then choose the smallest rocket that can lift it.'),
+        h('ul',{class:'plain'}, h('li',{}, 'The green bar shows your payload compared with each rocket.'), h('li',{}, 'The purple badge marks the smallest rocket that fits.'), h('li',{}, 'Coins you save count as Smart spending points.')),
+        h('div',{class:'btnrow'}, h('button',{class:'sbtn green', onclick:closeOverlay}, 'Got it'))); };
+    const draw = () => { const T = totals(S); const carry = S.rocket ? S.rocket.carry : 0;
+      const L = [['coins', S.sandbox ? '∞' : S.budget - T.cost, T.cost > S.budget ? 'warn' : '']];
+      if (!isM) L.push(['mass', `${T.mass}/${carry||'?'}`, (!S.rocket || T.mass > carry) ? 'warn' : ''], ['power', `+${T.made}/−${T.used}`, T.used > T.made ? 'warn' : 'good']);
+      setMon(L); renderSide();
+      const g = guided ? guideStep(S) : null;
+      const tabs = h('div',{class:'tabs', role:'tablist'}, cats.map(c => { const n = (c==='rocket' && S.rocket ? 1 : 0) + Pk.parts.filter(p => (isM || p.cat===c) && has(S,p.id)).length;
+        return h('button',{class:'tab'+(c===tab?' on':'')+(g && g.tab===c && c!==tab ? ' pulse' : ''), role:'tab', 'aria-selected': c===tab ? 'true' : 'false', style:`--tc:${CAT[c][1]}`, onclick:() => { tab = c; if (c==='rocket') rocketLesson(); draw(); }}, isM ? 'Tools' : CAT[c][0], n ? h('small',{}, n) : null); }));
+      const ow = who(S, isM ? 'science' : CATROLE[tab]);
+      const bar = h('div',{class:'shopbar'}, h('button',{class:'back', onclick:() => { S.inShop = false; res('back'); }}, S.k==='jupiter' ? '‹ Change moon / orbit' : '‹ Change site'), ow ? h('span',{class:'owner'}, `${ow}'s tab`) : null);
+      const tiles = h('div',{class:'tiles', style:`--tc:${CAT[tab][1]}`});
+      if (tab === 'rocket'){ const fitting = Pk.rockets.filter(r => r.carry >= T.mass); const smallest = fitting.length ? fitting.reduce((a,b) => a.carry <= b.carry ? a : b) : null;
+        Pk.rockets.forEach(r => { const fits = r.carry >= T.mass; const t = h('div', {class:'tile'+(S.rocket===r?' sel':''), tabIndex:0, role:'button', style:`--tc:${CAT.rocket[1]}`},
+          h('div',{class:'tn'}, r.name), h('div',{class:'ts'}, h('span',{class:'bd c'}, `${r.cost} coins`), h('span',{class:'bd cr'}, `carries ${r.carry}`), r === smallest ? h('span',{class:'bd best'}, 'smallest that fits') : h('span',{class:'bd '+(fits?'fit':'nofit')}, fits ? 'fits' : 'too small')),
+          h('div',{class:'rbar'+(fits?'':' over')}, h('i',{style:`width:${Math.min(100, T.mass / r.carry * 100)}%`})));
+          const pick = () => { S.rocket = r; tell(`${r.name}: costs ${r.cost} coins and can carry ${r.carry}. Your payload is ${T.mass}. ${fits ? 'It fits!' : 'Too heavy for this rocket.'}`, !fits); draw(); };
+          t.onclick = pick; t.onkeydown = e => { if (e.key==='Enter'||e.key===' '){ e.preventDefault(); pick(); } }; tiles.append(t); }); }
+      Pk.parts.filter(p => isM || p.cat === tab).forEach(p => { const n = qty(S,p.id); const off = p.only && S.site.id !== p.only;
+        const t = h('div', {class:'tile'+(n?' sel':'')+(p.must?' must':'')+(off?' off':''), tabIndex:0, role:'button', style:`--tc:${CAT[p.cat][1]}`},
+          h('div',{class:'tn'}, p.name),
+          h('div',{class:'ts'}, h('span',{class:'bd c'}, `${p.cost}`), !isM && h('span',{class:'bd m'}, `mass ${p.mass}`), !isM && powerBadge(p)),
+          p.multi && n > 0 ? h('span',{class:'q'}, `×${n}`) : null);
+        const tap = () => { if (off) { tell(`${p.name} only works for Proxima b.`, true); return; }
+          if (p.multi) S.q[p.id] = n + 1; else S.q[p.id] = n ? 0 : 1; tell(p.text); draw(); };
+        t.onclick = tap; t.onkeydown = e => { if (e.key==='Enter'||e.key===' ') { e.preventDefault(); tap(); } };
+        if (p.multi && n > 0) t.append(h('button', {class:'minus', 'aria-label':`Remove one ${p.name}`, onclick:e => { e.stopPropagation(); S.q[p.id] = n-1; draw(); }}, '−'));
+        tiles.append(t); });
+      if (S.orbit && S.orbit.cost && tab === 'rocket') tiles.append(h('div',{class:'tile sel', style:`--tc:${CAT.rocket[1]}`}, h('div',{class:'tn'}, 'Braking fuel (moon orbit)'), h('div',{class:'ts'}, h('span',{class:'bd c'}, S.orbit.cost), h('span',{class:'bd m'}, `mass ${S.orbit.mass}`))));
+      const ready = readyList(S).every(([ok]) => ok);
+      const simBtn = !isM && h('button', {class:'sbtn purple'+(g && g.tab==='sim' ? ' pulse' : ''), disabled: !S.sandbox && S.sims >= 3, onclick:() => runSim()}, !S.sandbox && S.sims >= 3 ? 'No tests left' : `Simulate (${S.sandbox || S.sims === 0 ? 'free' : '1 coin'})`);
+      const go = h('button', {class:'sbtn green'+(ready ? ' ready' : ''), onclick:() => launch()}, isM ? 'Start observing ›' : 'Launch! ›');
+      if (S.team.n > 1 && !S.sandbox && (T.cost > S.budget || (S.rocket && T.mass > S.rocket.carry))) tell(`Team huddle! ${who(S,'engineer')} and ${who(S,'science')} both want more. Decide together what to give up before launch.`, true);
+      info.style.flex = g ? '1' : '';
+      wrap.replaceChildren(bar, tabs, tiles, checkPanel(S), g ? h('div',{class:'guidebox'}, h('b',{}, 'Space Arli\'s guide: '), g.text) : info, h('div',{class:'actions'}, g ? info : h('span',{class:'sp'}), simBtn, go)); };
+    const problems = () => { const T = totals(S); const errs = [];
+      readyList(S).forEach(([ok, t]) => { if (!ok && !/^Coins|^Mass/.test(t)) errs.push(`✗ ${t}.`); });
+      if (S.k==='mars' && has(S,'airbags') && !has(S,'parachute') && T.mass > 8) errs.push(`Airbags can only land light missions (mass 8 or less), and yours is ${T.mass}. NASA used airbags for small rovers. Add Parachute + Rockets.`);
+      const fit = []; if (T.cost > S.budget) fit.push(`Too expensive: ${T.cost} coins, but you have ${S.budget}.`);
+      if (S.rocket && T.mass > S.rocket.carry) fit.push(`Too heavy: payload ${T.mass}, but the ${S.rocket.name} carries ${S.rocket.carry}.`);
+      return {errs, fit}; };
+    const runSim = () => { const {errs, fit} = problems(); if (errs.length || fit.length) { tell('Fix your plan before testing it: ' + [...fit, ...errs].join(' '), true); return; }
+      if (!S.sandbox){ if (S.sims >= 3) return; if (S.sims >= 1) S.budget -= 1; } S.sims++; draw(); showSim(S); };
+    const doLaunch = () => { const T = totals(S); S.coins = S.sandbox ? 999 : S.budget - T.cost; S.mass = T.mass; S.inShop = false; S.launched = true;
+      log(`Launched with: ${S.rocket ? S.rocket.name + ', ' : ''}${Pk.parts.filter(p=>has(S,p.id)).map(p=>p.name+(qty(S,p.id)>1?' ×'+qty(S,p.id):'')).join(', ')}`);
+      renderSide(); res('ok'); };
+    const launch = () => { const {errs, fit} = problems();
+      if (errs.length || fit.length) { const all = [...fit, ...errs]; const short = all.slice(0,2).join(' ') + (all.length > 2 ? ' (See the ✗ lines in "Ready to launch?")' : '');
+        if (S.k==='mars' && fit.length && S.onTime && !S.sandbox) {
+          if (!S.windowWarned){ S.windowWarned = true; draw(); tell('Careful! If you try to launch a plan that doesn\'t fit, you will miss the launch window (Mars lines up only every 26 months) and lose 10 points. ' + short, true); return; }
+          S.onTime = false; log('Missed the launch window (−10 On time points)'); choiceAdd(S, 'Missed the launch window (−10 points)', 'rocket', 'engineer'); draw(); tell('You missed the launch window! You lose the 10 On time points. ' + short, true); return; }
+        draw(); tell(short, true); return; }
+      if (S.team.n > 1){ const agreed = new Set(); const row = h('div',{class:'btnrow'});
+        const drawT = () => row.replaceChildren(...S.team.players.map((p,i) => h('button',{class:'sbtn '+(agreed.has(i)?'green':'grey'), onclick:() => { agreed.add(i); drawT(); if (agreed.size === S.team.n){ closeOverlay(); choiceAdd(S, 'Whole team agreed to launch', 'science'); doLaunch(); } }}, `${agreed.has(i)?'✓ ':''}${p.name}`)));
+        drawT(); overlay(h('h3',{}, 'Team check: ready to launch?'), h('p',{}, 'Each explorer taps their name to agree. Once you launch, there is no going back, just like a real mission.'), row,
+          h('div',{class:'btnrow', style:'margin-top:10px'}, h('button',{class:'sbtn pink sm', onclick:() => { closeOverlay(); tell('Team huddle: talk it over, change the plan, then launch again.'); }}, 'We need to talk'))); return; }
+      doLaunch(); };
+    tell(isM ? 'Buy tools with your coins. Tap a tool to read about it.' : 'Use the colored tabs to pack parts. The Rocket tab is last: pick the smallest rocket that fits your payload.');
+    draw(); content.append(wrap); }); }
+function powerBadge(p){ if (p.night) return h('span',{class:'bd pp'}, `+${p.night} night`); const v = p.power||0; return h('span', {class:'bd '+(v>0?'pp':v<0?'pn':'p0')}, v>0?`+${v} power`:v<0?`−${-v} power`:'0 power'); }
+
+function storyUI(S, segLabels){
+  clear(true); say('');
+  const tl = h('div',{class:'tl'}, segLabels.map(l => h('div',{class:'seg'}, l)));
+  const mach = h('div',{class:'mach'}); const gauges = h('div',{class:'gauges'});
+  const cap = h('div',{class:'cap', 'aria-live':'polite'}); const dec = h('div',{class:'dec'});
+  const pauseB = h('button',{class:'cbtn'}, 'Pause'); const speedB = h('button',{class:'cbtn'}, 'Speed ×1'); const replayB = h('button',{class:'cbtn'}, 'Replay this part');
+  content.append(h('div',{class:'story'}, tl, h('div',{class:'scene'}, mach, gauges), cap, dec, h('div',{class:'sctl'}, pauseB, speedB, replayB)));
+  let paused = false, speed = 1, waiters = [], segLog = [], replaying = false; const t = RUN;
+  const gate = () => paused ? new Promise(r => waiters.push(r)) : Promise.resolve();
+  pauseB.onclick = () => { paused = !paused; pauseB.textContent = paused ? 'Play' : 'Pause'; if (!paused) waiters.splice(0).forEach(f => f()); };
+  speedB.onclick = () => { speed = speed === 1 ? 2 : 1; speedB.textContent = `Speed ×${speed}`; };
+  const wait = async ms => { await sleep(ms/speed); await gate(); alive(t); };
+  const addLine = (text, cls) => { cap.append(h('div',{class:'ln '+(cls||'')}, text)); while (cap.children.length > 4) cap.firstChild.remove(); };
+  replayB.onclick = async () => { if (replaying || !segLog.length) return; replaying = true; const copy = segLog.slice(); cap.replaceChildren(); for (const [tx,c] of copy){ addLine(tx, c); await new Promise(r => setTimeout(r, 650)); } replaying = false; };
+  return {
+    seg(i){ [...tl.children].forEach((c,j) => c.className = 'seg'+(j<i?' done':j===i?' now':'')); segLog = []; },
+    finish(){ [...tl.children].forEach(c => c.className = 'seg done'); },
+    async line(text, cls = '', ms = 1700){ segLog.push([text, cls]); addLine(text, cls); await wait(ms); },
+    machines(list){ mach.replaceChildren(...list.map(m => h('div',{class:'mc'+(m.src?' src':'')+(m.on?' on':'')}, m.name, h('small',{}, m.on ? (m.note || 'ON') : (m.offNote || 'OFF'))))); },
+    gauge(key, label, val, max, cls){ let g = gauges.querySelector(`[data-k="${key}"]`); if (!g){ g = h('div',{class:'gg','data-k':key}, h('div',{class:'gl'}), h('div',{class:'gb'}, h('i'))); gauges.append(g); }
+      g.className = 'gg '+(cls||''); g.querySelector('.gl').replaceChildren(h('span',{}, label), h('span',{}, max ? `${val} / ${max}` : `${val}`)); g.querySelector('i').style.width = `${Math.max(0, Math.min(100, max ? val/max*100 : 0))}%`; },
+    async decide(prompt, opts){ dec.replaceChildren(h('div',{class:'dq'}, prompt)); const v = await choose(opts, dec); dec.replaceChildren(); return v; },
+    async die(label){ dec.replaceChildren(h('div',{class:'dq'}, label)); const v = await rollDie(dec); await wait(700); dec.replaceChildren(); return v; },
+    async power(made, machines, why, preview){ const on = new Set(machines.map(m => m.id)); const used = () => machines.filter(m => on.has(m.id)).reduce((a,m) => a+m.need, 0);
+      if (used() <= made) return on; if (machines.filter(m => m.locked).reduce((a,m) => a+m.need, 0) > made) return null;
+      const prevJob = {...JOB}; setJob(4, 'Switch off machines until power used fits power made. The Habitat (or robot) must stay on.', 'Keep the crew or robot alive first. Extras come second.', 'Power check');
+      return new Promise(res => { const tg = h('div',{class:'toggles'}); const go = h('button',{class:'sbtn green sm'}, 'Continue ›'); const pv = h('div',{class:'pv'});
+        const draw = () => { tg.replaceChildren(...machines.map(m => h('button',{class:'tog '+(on.has(m.id)?'on':'off')+(m.locked?' lock':''), onclick:() => { if (m.locked) return; on.has(m.id) ? on.delete(m.id) : on.add(m.id); draw(); }}, m.name, h('small',{}, (on.has(m.id)?'ON':'OFF') + ` · uses ${m.need}` + (m.locked?' · must stay on':'')))));
+          const u = used(); go.disabled = u > made; go.textContent = u > made ? `Using ${u} of ${made}` : 'Continue ›';
+          const lines = [[u <= made ? 'ok' : 'bad', `Power: using ${u} of ${made}`]];
+          if (machines.some(m => m.id==='drill') && machines.some(m => m.id==='melter') && on.has('drill') !== on.has('melter')) lines.push(['warn', 'The Drill and Melter only work together. One alone makes no water.']);
+          if (preview) lines.push(...preview(on)); pv.replaceChildren(...lines.map(([c,t]) => h('div',{class:c}, t))); };
+        go.onclick = () => { const off = machines.filter(m => !on.has(m.id)).map(m => m.name); log(`Power: switched off ${off.join(', ')||'nothing'}`); if (off.length) choiceAdd(S, `Switched off: ${off.join(', ')}`, 'power', 'engineer'); dec.replaceChildren(); setJob(4, prevJob.do, prevJob.why, 'Sustain'); res(on); };
+        const root = dec.closest('.story'); root.classList.add('pw'); go.addEventListener('click', () => root.classList.remove('pw'));
+        draw(); dec.replaceChildren(h('div',{class:'dq'}, callout(S, 'engineer', `Not enough power! ${why} Tap machines to switch them off and watch what happens.`)), tg, h('div',{class:'pwrow'}, pv, go)); }); },
+    dec };
+}
+
+async function moonExplore(S){
+  let deck = shuffle(['boulder','dust','flare','lucky']);
+  deck = S.site.id === 'equator' ? deck.filter(d => d !== 'boulder').slice(0,2) : deck.slice(0,3); S.evT = deck.length; S.evN = 0;
+  for (const ev of deck){ S.evN++;
+    if (ev === 'boulder'){
+      clear(); setJob(3, 'Decide: pay 1 coin for a safe-landing photo, or risk it with a dice roll.', 'Spending a little to avoid a big risk is a real engineering choice.', `Event ${S.evN} of ${S.evT}`);
+      content.append(card({kind:'Surprise event', title:'Boulder Field!', text:'Your landing spot is full of rocks. Pay 1 coin for an orbiter photo to find a safe spot, or risk it?', pc:PC.moon}));
+      say(callout(S, 'planner', 'Rocks! What will you do?'));
+      const v = S.coins >= 1 ? await choose([{label:'Pay 1 coin for a photo', value:'pay', color:'yellow'}, {label:'Risk it: roll a die', value:'risk', color:'pink'}]) : 'risk';
+      if (v === 'pay'){ if (!S.sandbox) S.coins--; choiceAdd(S, 'Boulder Field: paid 1 coin for a photo', 'safety', 'planner'); await eventCard(S, {title:'Boulder Field!', text:'Your landing spot is full of rocks. Do you have 1 coin left?', yes:'Paid for an orbiter photo. Safe landing!', no:'Roll a die. 1 or 2 = crash.', why:'The photo showed a flat spot, so the lander touched down safely.'}, true); say('Smart! The photo showed a safe, flat spot.'); }
+      else { choiceAdd(S, 'Boulder Field: took the risk', 'safety', 'planner'); await eventCard(S, {title:'Boulder Field!', text:'You decided to risk it. Roll a die: 1 or 2 = crash.', yes:null, no:'Roll a die. 1 or 2 = crash: lose 1 machine.', why:'Without a photo, landing on rocks is a gamble.'}, false);
+        const d = await rollDie(); if (d <= 2) { say(`You rolled ${d}. CRASH!`); await sleep(500); await next(); await loseMachines(S,1); } else say(`You rolled ${d}. Phew, a safe landing!`); }
+    }
+    if (ev === 'dust'){ const y = has(S,'cleaner'); if (!y) S.dust = 1;
+      await eventCard(S, {title:'Sticky Moon Dust', text:'Moon dust is sharp and clings to everything. Did you pack a Dust Cleaner?', yes:'Nothing happens.', no:'Every solar panel makes 1 less power for the rest of the mission.', why: y ? 'The cleaner keeps your solar panels clear, so they still make full power.' : 'Dust blocks sunlight from reaching the solar panels, so they make less electricity.'}, y);
+      say(y ? 'Your Dust Cleaner kept the panels shiny.' : 'Dusty panels! Each one now makes 2 power instead of 3.'); }
+    if (ev === 'flare'){ const y = has(S,'shelter'); if (!y) S.flare = true;
+      await eventCard(S, {title:'Solar Flare!', text:'The Sun throws out a blast of radiation. Did you pack a Storm Shelter?', yes:'Astronauts are safe.', no:'Astronauts hide in the lander: 1 less water is made on Lunar Day.', why: y ? 'Thick shelter walls block the radiation, so the crew keeps working.' : 'Time spent hiding is time not spent running the Drill and Melter.'}, y);
+      say(y ? 'The shelter kept everyone safe.' : 'The crew lost time hiding. 1 less water on Lunar Day.'); }
+    if (ev === 'lucky'){ const y = has(S,'drill'); const add = S.site.id==='equator' ? 1 : 2; if (y) S.tank += add;
+      await eventCard(S, {title:'Lucky Ice Pocket', text:'Your drill hits a big chunk of ice! Do you have an Ice Drill?', yes:`+${add} water in your tank.`, no:'No drill: you can\'t dig it up.', why: y ? 'More ice in the ground means more water for the crew.' : 'Ice is only useful if you can dig it up.'}, y);
+      say(y ? `+${add} water for your tank!` : 'Without a drill, the ice stays in the ground.'); }
+    setMon(monList(S)); renderSide(); await next();
+  } }
+async function moonSustain(S){
+  setJob(4, 'Watch your Moon base. Make a choice when it stops and asks you.', 'This is where your plan proves itself. Watch the power and water gauges.', 'Day and night');
+  const st = storyUI(S, ['Lunar Day','Lunar Night']); const solar = qty(S,'solar'), each = 3 - (S.dust||0);
+  const machList = (on, day) => { const L = [{name:'Habitat', on:true, note:'2 astronauts'}];
+    if (has(S,'drill')) L.push({name:'Ice Drill', on: on.has('drill')}); if (has(S,'melter')) L.push({name:'Ice Melter', on: on.has('melter')});
+    if (solar) L.push({name:`Solar ×${solar}`, src:true, on: day || S.site.id==='pole', note:`+${solar*each}`, offNote:'dark'});
+    if (has(S,'battery')) L.push({name:`Battery ×${qty(S,'battery')}`, src:true, on: !day && solar > 0, note:`+${qty(S,'battery')*3}`, offNote: day ? 'charging' : 'empty'});
+    if (has(S,'nuclear')) L.push({name:'Nuclear', src:true, on:true, note:'+5'}); return L; };
+  st.gauge('tank','Water tank', S.tank, 8); st.gauge('fuel','Rocket fuel', S.fuel, 6, 'fuel');
+  for (const day of [true,false]){
+    st.seg(day ? 0 : 1); const nm = day ? 'Lunar Day' : 'Lunar Night';
+    const made = day ? solar*each + qty(S,'nuclear')*5 : moonNight(S);
+    st.machines(machList(new Set(['drill','melter']), day)); st.gauge('power','Power made', made, 12, 'power');
+    await st.line(day ? 'Lunar Day begins. The Sun will shine for 14 Earth days.' : 'The Sun sets. The Lunar Night lasts 14 Earth days.', 'big');
+    if (!day) await st.line(S.site.id==='pole' ? 'On the South Pole rim, sunlight keeps reaching your solar panels.' : 'Solar panels stop in the dark. Only batteries and nuclear power work now.', 'why');
+    const mach = [{id:'habitat', name:'Habitat', need:1, locked:true}]; if (has(S,'drill')) mach.push({id:'drill', name:'Ice Drill', need:2}); if (has(S,'melter')) mach.push({id:'melter', name:'Ice Melter', need:2});
+    const need = mach.reduce((a,m) => a+m.need, 0);
+    await st.line(`Power made: ${made}. Your machines need ${need}.`, made >= need ? 'good' : 'bad');
+    const on = await st.power(made, mach, `You make ${made} but need ${need}.`, set => { const w = set.has('drill') && set.has('melter') ? Math.max(0, S.site.water - (day && S.flare ? 1 : 0)) : 0; const after = S.tank + w - 3;
+      return [[w >= 3 ? 'ok' : after >= 0 ? 'warn' : 'bad', `Water: make ${w}, crew needs 3, tank ${S.tank} → ${Math.max(after, 0)}${after < 0 ? ' (runs out!)' : ''}`]]; });
+    if (!on){ st.machines(machList(new Set(), day)); await st.line('The Habitat has no power. The crew must go home.', 'bad'); throw new Over(`The Habitat had no power during the ${nm}.`, day ? 'dayPower' : 'nightPower'); }
+    st.machines(machList(on, day));
+    const works = on.has('drill') && on.has('melter'); const w = works ? Math.max(0, S.site.water - (day && S.flare ? 1 : 0)) : 0; S.made += w;
+    if (!works && has(S,'drill') && has(S,'melter')) S.noWaterPower = true;
+    if (works) await st.line(`The Ice Drill digs and the Ice Melter melts: +${w} water.`, 'good'); else await st.line(has(S,'drill') && has(S,'melter') ? 'The Drill and Melter are switched off, so no water is made.' : 'Without both a Drill and a Melter, no water can be made.', 'bad');
+    if (day && S.flare && works) await st.line('Why only that much? The crew lost time hiding from the solar flare.', 'why');
+    await st.line('The crew uses 3 water: 2 to drink and 1 to make air.');
+    if (w >= 3){ const extra = w - 3;
+      if (extra > 0){ const v = await st.decide(callout(S, 'life', `You have ${extra} extra water. Rocket fuel scores points; the tank is a safety net.`), [{label:`Make ${extra} rocket fuel`, value:'fuel', color:'yellow'}, {label:'Keep it in the tank', value:'tank', color:'blue'}]);
+        if (v === 'fuel') S.fuel += extra; else S.tank += extra; choiceAdd(S, `${nm}: extra water → ${v==='fuel'?'rocket fuel':'tank'}`, 'water', 'life'); log(`${nm}: +${extra} ${v}`);
+        await st.line(v === 'fuel' ? `${extra} water turned into rocket fuel for the trip to Mars.` : `${extra} water saved in the tank for later.`, 'good'); }
+    } else { const short = 3 - w;
+      if (S.tank >= short){ S.tank -= short; await st.line(`Short by ${short}. The emergency tank covers it.`, 'bad'); }
+      else { await st.line('Not enough water, and the tank is empty. The crew must go home.', 'bad'); throw new Over('The crew ran out of water and had to go home.', 'water'); } }
+    st.gauge('tank','Water tank', S.tank, 8); st.gauge('fuel','Rocket fuel', S.fuel, 6, 'fuel'); renderSide(); setMon(monList(S));
+  }
+  st.finish(); await st.line('The Moon base made it through a whole lunar day and night!', 'big', 1200); await choose([{label:'See my score ›', value:1, color:'green'}], st.dec); }
+
+async function marsExplore(S){
+  S.evT = 3; S.evN = 1;
+  const lsafe = has(S,'parachute') || (has(S,'airbags') && S.mass <= 8);
+  await eventCard(S, {title:'Seven Minutes of Terror', text:`Landing takes 7 minutes, and nobody on Earth can help. Your mass is ${S.mass}. Is your landing system safe for it?`, yes:'Safe landing!', no:'Crash! Lose 2 machines.', why:'Messages take minutes to reach Mars, so the lander must land itself. Parachutes and rockets slow it down.'}, lsafe);
+  say(lsafe ? 'Touchdown! Welcome to Mars.' : 'CRASH!'); await next();
+  if (!lsafe) await loseMachines(S,2);
+  else if (!has(S,'lradar')){ clear(); setJob(3, 'Roll the die: is there a rock where you land?', 'Without a Landing Radar, the lander cannot see rocks. A 1 means you hit one.', 'Landing');
+    content.append(card({kind:'Landing risk', title:'Rocks below!', text:'You have no Landing Radar, so the lander can\'t see rocks. Roll a die: 1 = you hit a rock and 1 machine breaks.', why:'Real Mars landers use radar and cameras to pick a safe spot as they come down.', pc:PC.mars}));
+    const d = await rollDie(); if (d === 1){ say('You rolled a 1. Bump! A rock.'); choiceAdd(S, 'Landing: hit a rock (no radar)', 'safety', 'engineer'); await sleep(500); await next(); await loseMachines(S,1); } else { say(`You rolled ${d}. No rocks. Phew!`); await next(); } }
+  else { choiceAdd(S, 'Landing Radar steered around rocks', 'safety', 'engineer'); }
+  for (const ev of shuffle(['cliff','dusty','river']).slice(0,2)){ S.evN++;
+    if (ev === 'cliff'){ const self = has(S,'selfrover'), rem = has(S,'remrover');
+      await eventCard(S, {title:'Rover Near a Cliff!', text:'Messages take up to 22 minutes to reach Mars. Do you have a Self-Driving Rover?', yes:'It stops itself. +5 points.', no: rem ? 'Remote Rover: roll a die. 1 to 3 = rover lost.' : 'No rover: nothing happens.', why:'A "STOP" message from Earth arrives up to 22 minutes late. Only a rover that thinks for itself can stop in time.'}, self);
+      if (self){ S.cliff = 5; say('Your rover saw the edge and stopped by itself!'); }
+      else if (rem){ say('Your "STOP" message is still on its way...'); const d = await rollDie(); if (d <= 3){ S.q.remrover--; S.roverLost = true; say(`You rolled ${d}. The rover went over the edge!`); choiceAdd(S, 'Remote Rover lost at the cliff', 'science', 'science'); } else say(`You rolled ${d}. It stopped just in time!`); }
+      else say('No rover out exploring, so no danger.'); }
+    if (ev === 'dusty'){ const y = has(S,'nuclear'); if (!y) S.springHalf = true;
+      await eventCard(S, {title:'Dusty Panels', text:'A dust storm rolls in right after landing. Do you have a Nuclear Generator?', yes:'It keeps running.', no:'Solar panels make HALF power in Spring (round down).', why:'Dust in the sky blocks sunlight. Nuclear power doesn\'t need the Sun.'}, y);
+      say(y ? 'Nuclear power keeps going, storm or not.' : 'Spring will be dark: solar panels make half power.'); }
+    if (ev === 'river'){ const y = has(S,'selfrover') || has(S,'remrover'); if (y) S.river = 10;
+      await eventCard(S, {title:'Ancient Riverbed', text:'Rocks shaped by water long ago are nearby! Do you have a rover?', yes:'Drive there: +10 points.', no:'Too far to walk. You miss it.', why:'Rovers carry instruments far from the base. That is how NASA\'s rovers found signs of old rivers on Mars.'}, y);
+      say(y ? 'Your rover found signs of an ancient river!' : 'Next time, a rover could reach it.'); }
+    setMon(monList(S)); renderSide(); await next(); } }
+async function marsSustain(S){
+  const st = storyUI(S, ['Spring','Summer','Autumn','Winter']);
+  const crates0 = qty(S,'crate'); st.gauge('tank','Water tank', S.tank, 12); st.gauge('food','Food crates', qty(S,'crate'), Math.max(4, crates0), 'food');
+  const intro = ['Spring is calm. Greenhouse seeds are just sprouting, so the crew eats from a crate.','Summer is dust storm season.','Autumn: machines are wearing out.','Winter: freezing cold. The Drill makes 1 less water and the Greenhouse needs extra power.'];
+  for (let s = 1; s <= 4; s++){
+    st.seg(s-1); const nm = ['','Spring','Summer','Autumn','Winter'][s]; setJob(4, 'Watch your Mars base through 4 seasons. Make a choice when it stops and asks you.', 'People need water and air every day and food every season. Watch the tank and food gauges.', `Season ${s} of 4`);
+    st.machines([...['habitat','drill','melter','oven','oxygen','recycler','greenhouse'].filter(id => id==='habitat' || has(S,id)).map(id => ({name: id==='habitat' ? 'Habitat' : partOf('mars',id).name, on:true})), ...(qty(S,'solar') ? [{name:`Solar ×${qty(S,'solar')}`, src:true, on:true}] : []), ...(has(S,'nuclear') ? [{name:'Nuclear', src:true, on:true, note:'+5'}] : [])]);
+    await st.line(`${nm} begins. ${intro[s-1]}`, 'big');
+    let half = s === 1 && S.springHalf, broken = false;
+    if (s === 1 && half) await st.line('The dust from landing still covers the panels: half solar power.', 'why');
+    if (s === 2){ const d = await st.die('Roll for a dust storm: 1 or 2 = storm'); half = d <= 2; await st.line(half ? `Rolled ${d}: DUST STORM! Solar panels make half power.` : `Rolled ${d}: clear skies.`, half ? 'bad' : 'good'); }
+    if (s === 3 && has(S,'recycler')){ const d = await st.die('Roll for the Recycler: 1 = it breaks'); broken = d === 1; await st.line(broken ? 'Rolled 1: the Recycler broke this season. The crew needs 4 drinking water.' : `Rolled ${d}: the Recycler is fine.`, broken ? 'bad' : 'good'); }
+    const each = 3 + (S.site.id==='equator'?1:0) - (s===4 && S.site.id==='pole'?1:0);
+    let solarP = qty(S,'solar') * each; if (half) solarP = Math.floor(solarP/2); const made = solarP + qty(S,'nuclear')*5;
+    const mach = [{id:'habitat', name:'Habitat', need:1, locked:true}];
+    [['drill','Ice Drill',2],['melter','Ice Melter',2],['oven','Soil Oven',3],['oxygen','Oxygen Maker',2]].forEach(([id,n,w]) => has(S,id) && mach.push({id, name:n, need:w}));
+    if (has(S,'recycler') && !broken) mach.push({id:'recycler', name:'Water Recycler', need:2});
+    if (has(S,'greenhouse')) mach.push({id:'greenhouse', name:'Greenhouse', need: s===4 ? 2 : 1});
+    const need = mach.reduce((a,m) => a+m.need, 0);
+    const show = on => st.machines([...mach.map(m => ({name:m.name, on:on.has(m.id)})), ...(qty(S,'solar') ? [{name:`Solar ×${qty(S,'solar')}`, src:true, on:true, note:`+${solarP}`}] : []), ...(has(S,'nuclear') ? [{name:'Nuclear', src:true, on:true, note:'+5'}] : [])]);
+    show(new Set(mach.map(m => m.id))); st.gauge('power','Power made', made, Math.max(need, made, 1), 'power');
+    await st.line(`Power made: ${made}. Machines need ${need}.`, made >= need ? 'good' : 'bad');
+    const on = await st.power(made, mach, `${nm}: you make ${made} but need ${need}.`, set => { let w = 0; if (set.has('drill') && set.has('melter')) w += Math.max(0, S.site.water - (s===4?1:0)); if (set.has('oven')) w += 3;
+      const nd = (set.has('recycler')?2:4) + (set.has('oxygen')?0:2) + (set.has('greenhouse')?1:0); const after = S.tank + w - nd;
+      const food = s >= 2 && set.has('greenhouse') ? 'greenhouse food' : qty(S,'crate') > 0 ? 'a Food Crate' : 'none (hungry!)';
+      return [[after >= 0 ? (w >= nd ? 'ok' : 'warn') : 'bad', `Water and air: make ${w}, need ${nd}, tank ${S.tank} → ${Math.max(after,0)}${after < 0 ? ' (runs out: crew goes home!)' : ''}`], [food.startsWith('none') ? 'warn' : 'ok', `Food this season: ${food}`]]; });
+    if (!on){ await st.line('The Habitat lost power.', 'bad'); throw new Over(`The Habitat lost power in ${nm}.`, 'power'); }
+    show(on);
+    let water = 0; if (on.has('drill') && on.has('melter')) water += Math.max(0, S.site.water - (s===4?1:0)); if (on.has('oven')) water += 3;
+    const drink = on.has('recycler') ? 2 : 4, air = on.has('oxygen') ? 0 : 2, gh = on.has('greenhouse') ? 1 : 0; const needW = drink + air + gh;
+    await st.line(`Water made: ${water}. Used: ${drink} to drink${air ? `, ${air} for air` : ''}${gh ? ', 1 for plants' : ''}.`, water >= needW ? 'good' : 'bad');
+    if (!on.has('oxygen') && has(S,'oxygen')) await st.line('Why so much? The Oxygen Maker is off, so water is split to make air.', 'why');
+    S.tank += water - needW; st.gauge('tank','Water tank', Math.max(0,S.tank), 12);
+    if (S.tank < 0){ S.tank = 0; await st.line('The water tank is empty. The crew must go home.', 'bad'); throw new Over(`In ${nm} the crew ran out of water or air and had to go home.`, 'water'); }
+    let food = 'hungry'; if (s >= 2 && on.has('greenhouse')) { food = 'greenhouse'; S.ghGrew = true; } else if (qty(S,'crate') > 0) { S.q.crate--; food = 'crate'; }
+    if (food !== 'hungry') S.fed++; else S.hungry = (S.hungry||0) + 1;
+    st.gauge('food','Food crates', qty(S,'crate'), Math.max(4, crates0), 'food');
+    await st.line(food === 'greenhouse' ? 'Fresh food from the greenhouse!' : food === 'crate' ? 'The crew opens a Food Crate.' : 'No food this season. The crew is hungry.', food === 'hungry' ? 'bad' : 'good');
+    log(`${nm}: made ${water}, used ${needW}, tank ${S.tank}, food ${food}`); renderSide(); setMon(monList(S));
+  }
+  st.finish(); await st.line('A whole Mars year! The crew is safe.', 'big', 1200); await choose([{label:'See my score ›', value:1, color:'green'}], st.dec); }
+
+function hurt(S, n, why){ S.health -= n; log(`Health −${n} (${why}) → ${Math.max(S.health,0)}`); renderSide(); if (S.health <= 0) { S.health = 0; throw new Over(`The robot's Health reached 0 (${why}).`, 'health'); } }
+async function jupiterExplore(S){
+  S.evT = 3; S.evN = 1;
+  clear(); setJob(3, 'Choose your route to Jupiter.', 'Fuel is precious far from Earth. Using it now means you can\'t use it later.', 'Event 1 of 3');
+  content.append(card({kind:'Surprise event', title:'Pick Your Route', text:'Fly straight there with your Extra Fuel Tank, or swing past Venus and Earth for a free speed boost? The long trip costs 1 Health.', why:'A "gravity assist" uses a planet\'s pull to speed up for free. Real missions like Juno did this, but it takes longer.', pc:PC.jupiter}));
+  let v = 'swing';
+  if (has(S,'tank')) { say(callout(S, 'engineer', 'Your fuel tank works only ONCE. Use it now, or save it for a surprise?'));
+    v = await choose([{label:'Use tank: fly straight', value:'fast', color:'yellow'}, {label:'Swing-by (−1 Health)', value:'swing', color:'blue'}]); }
+  else { say('No fuel tank, so you swing past Venus and Earth.'); await next(); }
+  choiceAdd(S, v === 'fast' ? 'Route: fast (used the fuel tank)' : 'Route: swing-by (−1 Health)', 'rocket', 'engineer');
+  if (v === 'fast') { S.tankUsed = true; say('Zoom! Straight to Jupiter.'); await sleep(400); } else hurt(S, 1, 'long swing-by trip');
+  for (const ev of shuffle(['blast','spray','eclipse']).slice(0,2)){ S.evN++;
+    if (ev === 'blast'){ const y = has(S,'vault'); await eventCard(S, {title:'Radiation Blast!', text:'Jupiter\'s radiation belts hit hard. Do you have a Radiation Vault?', yes:'Lose 1 Health.', no:'Lose 3 Health.', why:'Radiation damages computer chips. A thick metal vault, like Juno\'s, absorbs most of it.'}, y);
+      say(y ? 'The vault took most of the hit.' : 'Ouch! No shield for the robot\'s brain.'); setMon(monList(S)); await next(); hurt(S, y?1:3, 'radiation blast'); }
+    if (ev === 'spray'){ const y = has(S,'tank') && !S.tankUsed; if (y) { S.spray = 10; S.tankUsed = true; }
+      await eventCard(S, {title:'Water Spray Spotted!', text:'Scientists think water might be spraying out of the ice. Is your Extra Fuel Tank still unused?', yes:'Dive through it! +10 points.', no:'No fuel to change course. Watch it go by.', why:'Changing course in space takes fuel. Saving the tank kept this option open.'}, y);
+      say(y ? 'You flew right through the spray. Amazing science!' : 'It would take fuel to turn around.'); setMon(monList(S)); await next(); }
+    if (ev === 'eclipse'){ const y = has(S,'nuclear'); if (!y) S.eclipse = true;
+      await eventCard(S, {title:'Eclipse!', text:'Your robot passes into Jupiter\'s shadow. Do you have a Nuclear Generator?', yes:'All systems stay on.', no:'Solar wings go dark: switch off 1 instrument in Year 1.', why:'In a planet\'s shadow there is no sunlight at all. Nuclear power keeps working in the dark.'}, y);
+      say(y ? 'Nuclear power does not need sunlight.' : 'In Year 1 you will have to switch something off.'); setMon(monList(S)); await next(); } } }
+async function jupiterSustain(S){
+  const st = storyUI(S, ['Year 1','Year 2','Year 3','Year 4']); const o = S.orbit;
+  const instr = ['camera','radar','big','small'].filter(id => has(S,id));
+  st.gauge('health','Robot Health', S.health, 11, 'health'+(S.health<=3?' low':'')); st.gauge('data','Data sent home', S.sent, 12, 'data');
+  const intro = ['Arrival! All instruments switch on.','Radiation builds up: 1 extra Health lost this year.','Antenna hiccup: 1 fewer data packet can be sent.','Grand finale!'];
+  for (let y = 1; y <= 4; y++){
+    st.seg(y-1); setJob(4, 'Watch your robot explore for 4 years. Make a choice when it stops and asks you.', 'Data only counts when it reaches Earth, and radiation wears the robot down every year.', `Year ${y} of 4`);
+    st.machines([...instr.map(id => ({name:partOf('jupiter',id).name, on:true})), ...(has(S,'nuclear') ? [{name:'Nuclear', src:true, on:true, note:'+5'}] : []), ...(has(S,'wings') ? [{name:'Solar Wings', src:true, on:true, note:'+2'}] : [])]);
+    await st.line(`Year ${y}: ${intro[y-1]}`, 'big');
+    const on = new Set(instr);
+    if (y === 1 && S.eclipse && on.size){ const off = await st.decide(callout(S, 'science', 'Eclipse! Pick 1 instrument to switch off this year.'), [...on].map(id => ({label:partOf('jupiter',id).name, value:id, color:'pink', sm:true}))); on.delete(off); choiceAdd(S, `Eclipse: switched off ${partOf('jupiter',off).name}`, 'power', 'science'); }
+    let dbl = false;
+    if (y === 4){ const dmgF = Math.max(0, Math.max(0, S.site.rad + o.rad) - (has(S,'vault')?1:0)) + (y===2?1:0); const after = S.health - 2 - dmgF;
+      const v = await st.decide(callout(S, 'science', `Fly very close for double data? Health now ${S.health} → after the flyby ${S.health-2} → after this year's radiation ${after}.${after <= 0 ? ' The robot would stop!' : ''}`), [{label:'Fly close (−2 Health)', value:'close', color:'pink'}, {label:'Play it safe', value:'safe', color:'blue'}]);
+      choiceAdd(S, v === 'close' ? 'Year 4: close flyby' : 'Year 4: played it safe', 'science', 'science');
+      if (v === 'close'){ await st.line('Diving close to the surface...', 'bad'); hurt(S, 2, 'close flyby'); st.gauge('health','Robot Health', S.health, 11, 'health'+(S.health<=3?' low':'')); dbl = true; S.flyby = 10; } }
+    st.machines([...instr.map(id => ({name:partOf('jupiter',id).name, on:on.has(id)})), ...(has(S,'nuclear') ? [{name:'Nuclear', src:true, on:true, note:'+5'}] : []), ...(has(S,'wings') ? [{name:'Solar Wings', src:true, on:!(y===1 && S.eclipse), note:'+2', offNote:'shadow'}] : [])]);
+    let disc = (on.has('camera')?1:0) + (on.has('radar')?1:0); if (disc) disc = Math.max(0, disc + o.data); if (dbl) disc *= 2;
+    S.mem += disc; S.dataMade += disc; let cap = (on.has('big')?3:0) + (on.has('small')?1:0); if (y === 3) cap = Math.max(0, cap-1);
+    const send = Math.min(S.mem, cap); S.mem -= send; S.sent += send;
+    await st.line(`Instruments made ${disc} data packet${disc===1?'':'s'}${o.data ? ` (orbit: ${o.data > 0 ? '+' : ''}${o.data})` : ''}.`, disc ? 'good' : 'bad');
+    await st.line(cap ? `The antenna sent ${send} home. ${S.mem} waiting in memory.` : 'No antenna working: no data can reach Earth!', send ? 'good' : 'bad');
+    if (S.mem > 0 && cap) await st.line('Why is data waiting? Your antenna is the data pipe, and it is full.', 'why');
+    st.gauge('data','Data sent home', S.sent, 12, 'data'); renderSide();
+    const dmg = Math.max(0, Math.max(0, S.site.rad + o.rad) - (has(S,'vault')?1:0)) + (y===2?1:0);
+    if (dmg){ await st.line(`Radiation: −${dmg} Health.${has(S,'vault') ? ' The vault blocked some of it.' : ''}`, 'bad'); hurt(S, dmg, `Year ${y} radiation`); } else await st.line('No radiation damage this year.', 'good');
+    st.gauge('health','Robot Health', S.health, 11, 'health'+(S.health<=3?' low':'')); setMon(monList(S));
+  }
+  st.finish(); await st.line('Four years of exploring! The robot is still working.', 'big', 1200); await choose([{label:'See my score ›', value:1, color:'green'}], st.dec); }
+
+function clueEl(c, kind, onPick){ const el = h(onPick?'button':'div', {class:'clue'+(onPick?' pick':'')}, h('i',{}, kind), h('b',{}, c.t), c.d); if (onPick) el.onclick = onPick; return el; }
+async function mysteryExplore(S){
+  setJob(3, 'Read each clue card. Next you will sort them.', 'Telescope data is all you have. Good scientists check what could fool them.', 'Telescope data');
+  const air = shuffle(AIR), pl = shuffle(PLANET); S.clues = [];
+  const drawA = () => air.length && S.clues.push({...air.pop(), kind:'Air Clue'});
+  const drawP = () => pl.length && S.clues.push({...pl.pop(), kind:'Planet Clue'});
+  if (has(S,'scope')) { drawA(); drawA(); } if (has(S,'extra')) drawA(); if (S.site.id === 'x') drawA(); if (has(S,'ground')) drawP();
+  if (has(S,'watcher')) { const i = pl.findIndex(c => c.id === 'flares'); if (i >= 0) S.clues.push({...pl.splice(i,1)[0], kind:'Planet Clue'}); }
+  log(`Clues: ${S.clues.map(c=>c.t).join(', ') || 'none'}`); S.events.push(`Telescope data: ${S.clues.map(c=>c.t).join(', ') || 'none'}`);
+  let canDouble = has(S,'double');
+  const render = () => { clear(); setMon(monList(S)); renderSide(); const g = h('div',{class:'clues'});
+    S.clues.forEach((c,i) => g.append(clueEl(c, c.kind, canDouble ? () => { const pile = c.kind==='Air Clue' ? air : pl; if (!pile.length) { say('That pile is empty.'); return; }
+      pile.unshift({id:c.id,t:c.t,d:c.d}); const n = pile.pop(); S.clues[i] = {...n, kind:c.kind}; canDouble = false; choiceAdd(S, `Double Check: swapped ${c.t} for ${n.t}`, 'science', 'science'); render(); say(`You swapped ${c.t} for ${n.t}.`); next().then(resolveNext); } : null)));
+    if (!S.clues.length) g.append(h('div',{class:'card'}, 'No clues yet: you didn\'t buy a tool that draws clues.'));
+    content.append(g); };
+  let resolveNext; const done = new Promise(r => { resolveNext = r; });
+  render(); say(S.clues.length ? (canDouble ? 'Here is your telescope data. Double Check: tap one clue to swap it, or press Next.' : 'Here is your telescope data. Read each clue, then press Next.') : 'With no telescope time, you have nothing to go on.');
+  next().then(resolveNext); await done; }
+async function mysterySustain(S){
+  S.sorted = {};
+  if (S.clues.length){ clear(true); setMon(monList(S)); setJob(4, 'Sort each clue: Hint of life, Not proof, or Bad news.', 'Some signs can come from volcanoes or starlight, not life. Sorting clues is what good scientists do.', 'Sort the clues');
+    say('');
+    await new Promise(res => { const box = h('div',{style:'display:flex;flex-direction:column;gap:5px'}); content.append(h('div',{class:'dq'}, callout(S, 'science', 'Tap a label for every clue, then press Check.'))); const go = h('button',{class:'sbtn green'}, 'Check my sorting ›');
+      const draw = () => { box.replaceChildren(...S.clues.map(c => h('div',{class:'sortrow'}, h('div',{}, h('b',{}, c.t), h('small',{}, c.d)),
+          h('div',{class:'sortbtns'}, Object.entries(SORTN).map(([k,n]) => h('button',{class:'sb '+k+(S.sorted[c.id]===k?' on':''), onclick:() => { S.sorted[c.id] = k; draw(); }}, n))))));
+        const left = S.clues.filter(c => !S.sorted[c.id]).length; go.disabled = left > 0; go.textContent = left ? `Sort ${left} more` : 'Check my sorting ›'; };
+      go.onclick = res; draw(); content.append(box, h('div',{class:'btnrow'}, go)); });
+    const right = S.clues.filter(c => S.sorted[c.id] === SORTK[c.id]).length;
+    clear(true); content.append(h('div',{class:'card'}, h('h3',{}, `You sorted ${right} of ${S.clues.length} correctly`), h('ul',{}, S.clues.map(c => h('li',{class: S.sorted[c.id]===SORTK[c.id] ? 'good' : 'bad'}, `${c.t}: ${SORTN[SORTK[c.id]]}. ${SORTWHY[c.id]}`)))));
+    choiceAdd(S, `Sorted ${right} of ${S.clues.length} clues correctly`, 'science', 'science'); say(right === S.clues.length ? 'Perfect sorting, scientist!' : 'Read why each clue goes where it does.'); await next(); }
+  setJob(4, 'As a team, decide what your clues really say.', 'Scientists only claim what the evidence shows. Sometimes "maybe" is the honest answer.', 'Verdict');
+  clear(); setMon(monList(S)); const g = h('div',{class:'clues'}); S.clues.forEach(c => g.append(clueEl(c,c.kind))); content.append(g);
+  say(S.team.n > 1 ? 'Team vote! What do your clues say?' : 'Your Verdict: what do your clues say?');
+  S.verdict = await choose([{label:'No life here', value:'no', color:'grey'}, {label:'Maybe: need more clues', value:'maybe', color:'blue'}, {label:'Strong hint of life', value:'strong', color:'green'}]);
+  choiceAdd(S, `Verdict: ${{no:'No life here', maybe:'Maybe', strong:'Strong hint of life'}[S.verdict]}`, 'science', 'science');
+  clear(); setJob(4, 'Write one question future scientists should answer.', 'This search will take more than one lifetime. Good missions plan for the next team.', 'Pass the torch');
+  content.append(card({kind:'Decision', title:'Pass the Torch', pc:PC.mystery, text:'A radio message takes about 4 years to reach Proxima b and 40 years to reach TRAPPIST-1e. This search will take more than one lifetime.'}));
+  S.torch = await ask('Write one question future scientists should answer:'); if (S.torch) choiceAdd(S, `Question for the future: "${S.torch}"`, 'science');
+  if (has(S,'probe')){ clear(); content.append(card({kind:'Bonus', title:'Probe Arrives', pc:PC.mystery, text:'20 years later... your Light-Sail Probe flies past Proxima b and sends close-up pictures home!'})); say('Your probe made it!'); await next(); } }
+
+const mysteryOk = ids => ids.includes('hot') ? ['no'] : ids.includes('both') ? ['strong'] : ['maybe'];
+const SCORE = {
+ moon: S => { const safe = !S.over; const b = S.obj === 'b'; const far = S.site && S.site.id==='far' && safe && S.done ? 10 : 0;
+  return [['Crew safe','Both astronauts had water and air every turn', safe?40:0, 40],
+          ['Moon water',`${b?'4':'5'} per water made from Moon ice (${S.made||0})`, Math.min(b?20:30, (S.made||0)*(b?4:5)), b?20:30],
+          ['Fuel & science',`${b?'7':'5'} per rocket fuel (${S.fuel||0})${S.site && S.site.id==='far'?' + Far Side telescope 10':''}`, Math.min(b?30:20, (S.fuel||0)*(b?7:5) + far), b?30:20],
+          ['Smart spending',`2 per coin left (${S.sandbox?0:S.coins||0})`, Math.min(10, (S.sandbox?0:S.coins||0)*2), 10]]; },
+ mars: S => { const safe = !S.over; const b = S.obj === 'b'; const sci = (S.ghGrew?10:0) + (S.river||0) + (S.cliff||0) + (safe && S.done ? S.tank : 0);
+  return [['Crew safe','Water and air for all 4 astronauts every season', safe?40:0, 40],
+          ['Crew fed',`${b?'2.5':'5'} for each season with Food (${S.fed||0})`, Math.floor((S.fed||0)*(b?2.5:5)), b?10:20],
+          ['Science',`Greenhouse ${S.ghGrew?10:0} + riverbed ${S.river||0} + cliff ${S.cliff||0} + water left ${safe && S.done ? S.tank : 0}`, Math.min(b?40:30, sci), b?40:30],
+          ['On time','Plan fit the budget and rocket the first time', S.onTime?10:0, 10]]; },
+ jupiter: S => { const alive = !S.over; const b = S.obj === 'b'; const ppd = S.site ? S.site.ppd : 0;
+  const rows = [['Robot survived','Health above 0 at the end of Year 4', alive?30:0, 30],
+          ['Data sent home',`${S.sent||0} packets × ${ppd} points`, Math.min(b?40:50, (S.sent||0)*ppd), b?40:50]];
+  rows.push(b ? ['Health left',`3 per Health point left (${alive ? S.health : 0})`, alive ? Math.min(30, (S.health||0)*3) : 0, 30]
+              : ['Bonus science',`Water spray dive ${S.spray||0} + close flyby ${alive?(S.flyby||0):0}`, Math.min(20, (S.spray||0) + (alive?(S.flyby||0):0)), 20]);
+  return rows; },
+ mystery: S => { const ids = (S.clues||[]).map(c => c.id); const ok = mysteryOk(ids); const decided = !!S.verdict; const b = S.obj === 'b';
+  const sortOk = (S.clues||[]).filter(c => S.sorted && S.sorted[c.id] === SORTK[c.id]).length; const torch = !!(S.torch && S.torch.length >= 4); const coins = S.sandbox ? 0 : (S.coins||0); const fut = b ? 25 : 15;
+  return [['Clues',`10 per clue (${(S.clues||[]).length})`, Math.min(b?20:30, (S.clues||[]).length*10), b?20:30],
+          ['Sorting',`5 per clue sorted correctly (${sortOk})`, Math.min(20, sortOk*5), 20],
+          ['Verdict', !decided ? 'Not decided yet' : ok.includes(S.verdict) ? 'Your answer matches your clues' : 'Your clues point to a different answer', decided && ok.includes(S.verdict) ? 25 : 0, 25],
+          ['Pass the Torch', torch ? 'You wrote a question for the future' : 'No question written yet', torch ? 10 : 0, 10],
+          ['Future thinking', has(S,'probe') ? 'Probe launched' : `2 per coin left (${coins})`, has(S,'probe') ? fut : Math.min(fut, coins*2), fut]]; } };
+function tips(S){ const t = [];
+  if (S.k==='moon'){ if (S.overCode==='nightPower') t.push(`Your Habitat went dark at night. At the ${S.site.name}, the Sun sets for 14 days. Try batteries (with a solar panel) or a Nuclear Generator.`);
+    if (S.noWaterPower) t.push('Your Drill and Melter didn\'t have enough power to run together (they need 4, plus 1 for the Habitat). Check Night power in the Mission Check.');
+    if (S.overCode==='water') t.push('The crew ran out of water. Did you pack BOTH the Ice Drill and the Ice Melter, with enough power for them?');
+    if (S.dust) t.push('Moon dust weakened your solar panels. A Dust Cleaner costs just 1 coin.');
+    if (S.flare) t.push('A Storm Shelter would have kept the crew working during the solar flare.');
+    if (!t.length && S.rocket && S.rocket.id === 'large') t.push('Could a smaller rocket carry your payload? Saved coins are Smart spending points.');
+    if (!t.length && (S.fuel||0) < 2) t.push('Try saving extra water as rocket fuel: it earns points.'); }
+  if (S.k==='mars'){ if (S.overCode==='water') t.push('The water tank ran dry. A Water Recycler or Oxygen Maker cuts how much water the crew needs each season.');
+    if (S.overCode==='power') t.push('The Habitat lost power. Dust storms halve solar power, so bring extra panels or a Nuclear Generator.');
+    if (S.hungry) t.push(`The crew went hungry for ${S.hungry} season${S.hungry>1?'s':''}. Pack a Food Crate for each season, or a Greenhouse plus 1 crate for Spring.`);
+    if (!S.onTime) t.push('You missed the launch window. Check "Ready to launch?" and Simulate before you press Launch.');
+    if (S.roverLost) t.push('Your Remote Rover couldn\'t hear "STOP" in time. A Self-Driving Rover can think for itself.'); }
+  if (S.k==='jupiter'){ if (S.over) t.push(`Radiation wore your robot down at ${S.site.name}. A Radiation Vault helps, or try the far orbit or a moon with less radiation.`);
+    if (!S.over && S.mem > 0) t.push(`${S.mem} data packet${S.mem>1?'s were':' was'} stuck in memory. A bigger antenna sends more data home.`);
+    if (!S.over && (S.sent||0) * S.site.ppd < 30) t.push('Little data reached Earth. More instruments, a closer orbit, or a bigger antenna would help.');
+    if (!has(S,'nuclear')) t.push('Sunlight at Jupiter is very weak. A Nuclear Generator keeps everything running.'); }
+  if (S.k==='mystery'){ const ids = (S.clues||[]).map(c=>c.id); const ok = mysteryOk(ids);
+    if (!ok.includes(S.verdict)) t.push(ids.includes('hot') ? 'One of your clues said Too Hot. Liquid water is unlikely, so "No life here" fits best.' : ids.includes('both') ? 'Oxygen + Methane together is a strong hint, so "Strong hint of life" fits best.' : 'Your clues didn\'t clearly point one way, so "Maybe: need more clues" was the scientist\'s answer.');
+    if ((S.clues||[]).length < 4) t.push('More clue cards mean more points. Try the Space Telescope plus Extra Telescope Time.');
+    if ((S.clues||[]).some(c => S.sorted && S.sorted[c.id] !== SORTK[c.id])) t.push('Oxygen alone, methane alone and carbon dioxide can come from things that aren\'t alive: "Not proof". Too Hot and Star Flares are "Bad news".'); }
+  return t.slice(0,2); }
+
+function reportText(S, rows, total){ const Pk = P[S.k]; const L = []; const q = S.q0 || S.q;
+  L.push(`SPACE EXPLORATION 2026 · MISSION REPORT`, `${Pk.name}: ${Pk.mission} · Objective: ${Pk.objs[S.obj][0]}${S.sandbox ? ' · Sandbox practice' : ''}`);
+  if (S.team.n > 1) L.push(`Team: ${S.team.players.map(p => `${p.name} (${p.roles.map(r => ROLES[r][0]).join(' + ')})`).join('; ')}`);
+  L.push('', 'PLAN', `Site: ${S.site ? S.site.name : '-'}${S.orbit ? ` · Orbit: ${S.orbit.name}` : ''}${S.rocket ? ` · Rocket: ${S.rocket.name} (carries ${S.rocket.carry})` : ''}`);
+  L.push(`Parts: ${P[S.k].parts.filter(p => q[p.id]).map(p => `${p.name}${q[p.id] > 1 ? ' ×' + q[p.id] : ''}`).join(', ') || '-'}`);
+  if (S.k !== 'mystery') L.push(`Payload mass: ${S.mass} · Test runs: ${S.sims}`);
+  L.push('', 'WHAT HAPPENED', ...S.events.map(e => `- ${e}`));
+  L.push('', 'KEY DECISIONS', ...S.choices.map(([c,,role]) => `- ${role && S.team.n > 1 ? who(S, role) + ': ' : ''}${c}`));
+  if (S.over) L.push('', `MISSION OVER: ${S.over}`);
+  if (!S.sandbox) L.push('', `SCORE: ${total}/100 ${'★'.repeat(starsFor(total))}`, ...rows.map(([c,,g,m]) => `- ${c}: ${g}/${m}`));
+  const tp = tips(S); if (tp.length) L.push('', 'TRY NEXT TIME', ...tp.map(x => `- ${x}`));
+  return L.join('\n'); }
+function showReport(S, rows, total){ const txt = reportText(S, rows, total); const lines = txt.split('\n');
+  const body = []; let ul = null;
+  lines.slice(2).forEach(l => { if (/^[A-Z][A-Z ]+(:.*)?$/.test(l)) { body.push(h('h4',{}, l)); ul = null; } else if (l.startsWith('- ')) { if (!ul){ ul = h('ul',{class:'plain'}); body.push(ul); } ul.append(h('li',{}, l.slice(2))); } else if (l.trim()) { body.push(h('p',{}, l)); ul = null; } });
+  const status = h('p',{style:'font-weight:700;color:#1f8a4c'});
+  const fallback = () => { const ta = h('textarea',{class:'rep'}); ta.value = txt; document.body.append(ta); ta.select(); let ok = false; try { ok = document.execCommand('copy'); } catch(e){} ta.remove(); status.textContent = ok ? 'Copied! Paste it into a note or message to share and compare designs.' : 'Copy didn\'t work here. Select the report text and copy it.'; };
+  const copy = () => { try { navigator.clipboard.writeText(txt).then(() => { status.textContent = 'Copied! Paste it into a note or message to share and compare designs.'; }, fallback); } catch(e){ fallback(); } };
+  overlay(h('h3',{}, 'Mission report'), h('p',{style:'font-weight:700'}, lines[1]), ...body, status, h('div',{class:'btnrow'}, h('button',{class:'sbtn green', onclick:copy}, 'Copy report'), h('button',{class:'sbtn blue', onclick:closeOverlay}, 'Close'))); }
+
+const FLOW = {moon:[moonExplore, moonSustain], mars:[marsExplore, marsSustain], jupiter:[jupiterExplore, jupiterSustain], mystery:[mysteryExplore, mysterySustain]};
+const R3 = {moon:'Launch, land, and face surprise events.', mars:'Land on Mars, then face 2 surprise events.', jupiter:'Choose your route, then face 2 surprise events.', mystery:'Point your telescopes and collect data.'};
+const R4 = {moon:'Watch your base survive a lunar day and night.', mars:'Watch your crew live through 4 seasons.', jupiter:'Watch your robot explore for 4 years.', mystery:'Make your verdict and plan for the future.'};
+async function playPlanet(k, o = {}){
+  const Pk = P[k]; drawBackdrop(k); const S = newState(k, o); CUR = S; inMission(true); renderSide(); log(`— ${Pk.name} ${S.sandbox ? 'sandbox' : 'mission'} started —`);
+  let step = o.keep ? 'shop' : 'team';
+  while (true){
+    if (step === 'team'){ const r = await teamSetup(S); if (r === 'back') return start(null, S.sandbox); step = 'brief'; continue; }
+    if (step === 'brief'){ const r = await briefing(S); if (r === 'back'){ step = 'team'; continue; } step = 'site'; continue; }
+    if (step === 'site'){ S.round = 1; const r = await pickSite(S); if (r === 'back'){ step = 'brief'; continue; } S.site = r; log(`Picked: ${r.name}`); renderSide();
+      if (k === 'jupiter'){ const ob = await pickOrbit(S); if (ob === 'back'){ S.site = null; S.orbit = null; renderSide(); continue; } S.orbit = ob; log(`Orbit: ${ob.name}`); renderSide(); }
+      step = 'shop'; continue; }
+    if (step === 'shop'){ const r = await shop(S); if (r === 'back'){ step = 'site'; continue; } break; }
+  }
+  S.q0 = {...S.q};
+  try {
+    await roundIntro(S, 3, 'Explore', R3[k] + ' Once you launch, there is no going back, just like a real mission.'); await FLOW[k][0](S);
+    await roundIntro(S, 4, 'Sustain', R4[k]); await FLOW[k][1](S);
+  } catch (e) { if (!(e instanceof Over)) throw e; S.over = e.why; S.overCode = e.code; log(`Mission over: ${e.why}`);
+    clear(); content.append(h('div',{style:'margin:auto 0'}, card({kind:'Mission over', title: k==='jupiter' ? 'The robot stopped' : 'The crew went home', text:e.why, why:'Missions can fail. Engineers study every failure to design a better mission next time.', pc:PC[k]})));
+    say('Let\'s see your score, an Engineer\'s tip, and your mission report.'); await next('See score ›'); }
+  S.done = true; await scoreScreen(S); }
+
+async function scoreScreen(S){
+  const Pk = P[S.k]; const rows = SCORE[S.k](S); const total = rows.reduce((a,r) => a + r[2], 0);
+  const must = S.k === 'mystery' ? true : !S.over; const pass = total >= 60 && must; const st = starsFor(total);
+  if (pass && !S.sandbox) saveBest(S.k, total); if (!S.sandbox) addRecord(S, total);
+  if (S.k === 'moon' && !S.sandbox) store.set('se2026-guided', 1);
+  setJob(5, 'See how you did. Replay to try a new idea, or move on.', 'Every mission teaches something, even the ones that fail.', S.sandbox ? 'Practice done' : `${total} / 100`);
+  inMission(false); renderSide(); clear(true); setMon(S.sandbox ? [['practice','done']] : [['score', `${total}/100`, pass?'good':'warn']]); say('');
+  const nextKey = Pk.next; const tp = tips(S);
+  const c = h('div',{class:'card', style:`--pc:${PC[S.k]};border-color:${PC[S.k]}`}, h('div',{class:'k'}, `${Pk.name} · ${Pk.objs[S.obj][0]} · ${S.sandbox ? 'Practice' : 'Score sheet'}`),
+    S.sandbox ? h('p',{}, S.over ? `The mission ended early: ${S.over}` : 'Your mission worked! In Sandbox there is no score. Try a real mission to earn stars.') :
+    [h('div',{class:'score'}, rows.map(([cat, how, got, max]) => h('div',{class:'r'}, h('div',{}, h('b',{class:'cat'}, cat), h('small',{}, how)), h('span',{class:'v'}, `${got} / ${max}`)))),
+     h('div',{class:'tot'}, h('div',{class:'n'}, total, h('small',{}, ' / 100')), h('div',{class:'stars', 'aria-label':`${st} stars`}, '★'.repeat(st) + '☆'.repeat(3-st)))],
+    h('div',{class:'result '+(S.sandbox ? 'prac' : pass?'win':'lose')}, S.sandbox ? 'Practice complete' : pass ? (nextKey ? `Mission success! Move on to ${P[nextKey].name}.` : 'You finished Space Exploration 2026! You are a Space Explorer!') :
+      (!must ? `Replay: ${S.k==='jupiter'?'the robot stopped':'the crew had to go home'}. Try a new plan.` : 'Below 60. Replay with a new plan!')),
+    tp.map(t => h('div',{class:'tip'}, h('b',{}, 'Engineer\'s tip: '), t)));
+  const pin = h('div',{class:'pinned'});
+  content.append(h('div',{class:'scorewrap'}, c, pin)); if (pass && !S.sandbox) burst();
+  log(`${Pk.name} ${S.sandbox ? 'practice done' : `score: ${total}/100 → ${pass ? 'move on' : 'replay'}`}`);
+  while (true){ pin.replaceChildren();
+    const opts = [{label:`Replay ${Pk.name}`, value:'replay', color: pass ? 'yellow' : 'green'}];
+    if (pass && nextKey && !S.sandbox) opts.unshift({label:`Move on to ${P[nextKey].name} ›`, value:'next', color:'green'});
+    opts.push({label:'Mission report', value:'report', color:'teal'}, {label:'All planets', value:'menu', color:'purple'});
+    const v = await choose(opts, pin);
+    if (v === 'report'){ showReport(S, rows, total); continue; }
+    if (v === 'next') return start(nextKey, false, {team:S.team});
+    if (v === 'menu') return start(null, S.sandbox);
+    const how = await new Promise(res => overlay(h('h3',{}, `Replay ${Pk.name}`), h('p',{}, 'Keep your plan and change a part or two, or start fresh from the briefing?'),
+      h('div',{class:'btnrow'}, h('button',{class:'sbtn blue', onclick:() => { closeOverlay(); res('keep'); }}, 'Keep my plan'), h('button',{class:'sbtn green', onclick:() => { closeOverlay(); res('fresh'); }}, 'Start fresh'), h('button',{class:'sbtn grey sm', onclick:() => { closeOverlay(); res(null); }}, 'Cancel'))));
+    if (!how) continue;
+    const base = {team:S.team, obj:S.obj};
+    return start(S.k, S.sandbox, how === 'keep' ? {...base, keep:true, site:S.site, orbit:S.orbit, rocket:S.rocket, q:S.q0} : base); } }
+
+async function title(sandbox){
+  CUR = null; inMission(false); renderSide(); drawBackdrop('title'); clear(); setMon([]); const best = loadBest();
+  setJob(null, sandbox ? 'Sandbox: pick any planet to practice with unlimited coins. No score.' : 'Pick a planet. New explorers start with the Moon.', sandbox ? 'Practice lets you try wild ideas and see what happens, without losing points.' : 'Each planet is a different mission with its own challenges. They get harder from left to right.');
+  content.append(h('div',{class:'ttl'}, h('h2',{}, 'Space Exploration 2026'), h('p',{}, sandbox ? 'SANDBOX · practice with unlimited coins' : 'Design a mission. Manage coins, mass, power and data. Survive!')));
+  say(sandbox ? 'Sandbox mode: anything goes! Pick a planet.' : 'Hi, I\'m Space Arli, your mission computer! Pick a planet, or try Sandbox to practice.');
+  const k = await new Promise(res => { const g = h('div',{class:'planets'});
+    ORDER.forEach(id => { const b = best[id] ? starsFor(best[id]) : 0;
+      g.append(h('button',{class:'pbtn', onclick:() => res(id)}, h('div',{class:'orb', style:`background:${ORB[id]};--glow:${GLOW[id]}`}), P[id].name,
+        h('small',{}, `${'★'.repeat(P[id].stars)}${'☆'.repeat(4-P[id].stars)} difficulty`), h('div',{class:'st'}, sandbox ? '' : best[id] ? `Best ${best[id]} ${'★'.repeat(b)}` : id==='moon' ? 'Start here!' : ''))); });
+    const tb = h('div',{class:'titlebtns'},
+      sandbox ? h('button',{class:'sbtn grey sm', onclick:() => res('__real')}, '‹ Real missions') : h('button',{class:'sbtn teal sm', onclick:() => res('__sand')}, 'Sandbox (practice)'),
+      h('button',{class:'sbtn purple sm', onclick:() => res('__board')}, 'Mission records'), h('button',{class:'sbtn yellow sm', onclick:() => res('__intro')}, 'Mission Academy'));
+    content.append(g, tb); });
+  if (k === '__sand') return start(null, true); if (k === '__real') return start(null, false); if (k === '__intro') return runAcademy();
+  if (k === '__board'){ const B = store.get('se2026-board', []);
+    await new Promise(res => overlay(h('h3',{}, 'Mission records (this computer)'), B.length ? h('table',{class:'board'}, h('tr',{}, h('th',{}, 'Planet'), h('th',{}, 'Objective'), h('th',{}, 'Team'), h('th',{}, 'Date'), h('th',{}, 'Score')),
+      ...B.slice(0,12).map(r => h('tr',{}, h('td',{}, P[r.k].name), h('td',{}, r.obj), h('td',{}, r.team), h('td',{}, r.date), h('td',{class:'n'}, r.score)))) : h('p',{}, 'No missions flown yet. Your best scores will appear here.'),
+      h('div',{class:'btnrow'}, B.length ? h('button',{class:'sbtn grey sm', onclick:(e) => { if (e.target.dataset.sure){ store.set('se2026-board', []); store.set('se2026-best', {}); closeOverlay(); res(); } else { e.target.dataset.sure = 1; e.target.textContent = 'Tap again to clear all'; } }}, 'Clear records') : null, h('button',{class:'sbtn blue', onclick:() => { closeOverlay(); res(); }}, 'Close'))));
+    return start(null, sandbox); }
+  return playPlanet(k, {sandbox}); }
+
+function start(k, sandbox = false, o = {}){ RUN++; const t = RUN; $('#ask').hidden = true; closeOverlay(); $('#flag').classList.add('on'); try { speechSynthesis.cancel(); } catch(e){}
+  (k ? playPlanet(k, {sandbox, ...o}) : title(sandbox)).catch(e => { if (!(e instanceof Cancel) && t === RUN) console.error(e); }); }
+function stop(){ RUN++; CUR = null; inMission(false); renderSide(); $('#flag').classList.remove('on'); $('#ask').hidden = true; closeOverlay(); clear(); setMon([]); drawBackdrop('title');
+  setJob(null, 'Click the green flag to start.', 'The green flag starts the game, just like in Scratch.');
+  content.append(h('div',{class:'ttl', style:'margin:auto 0'}, h('h2',{}, 'Space Exploration 2026'), h('p',{}, 'Click the green flag to start.'))); say('Stopped. Click the green flag to play again!'); log('Stopped'); }
+$('#flag').onclick = () => { t0 = Date.now(); $('#log').replaceChildren(); log('Green flag clicked'); if (!store.get('se2026-intro', 0)) runAcademy(); else start(); };
+$('#stop').onclick = stop;
+window.__se = { simulate, P, SCORE };
+const boot = () => { renderSide(); if (!store.get('se2026-intro', 0)) runAcademy(); else start(); };
+window.claude?.hot?.ready ? window.claude.hot.ready(boot) : boot();
+})();
+</script>
+
+</body>
+</html>
